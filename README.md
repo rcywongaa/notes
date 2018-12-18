@@ -129,8 +129,15 @@ http://derekmolloy.ie/gpios-on-the-beaglebone-black-using-device-tree-overlays/
         char buf[LEN];
         readlink("/proc/self/exe", buf, LEN);
         std::string bin_path(buf);
-        bin_path.erase(bin_path.find_last_of("/"));
+        bin_path.erase(bin_path.rfind('/'));
         return bin_path + "/";
+    }
+
+## `getSrcDir()`
+
+    inline const std::string getSrcDir()
+    {
+        return std::string(__FILE__).erase(std::string(__FILE__).rfind('/')) + "/";
     }
 
 ## [Bring Up CAN Interface](https://www.elinux.org/Bringing_CAN_interface_up)
