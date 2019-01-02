@@ -342,3 +342,15 @@ https://null-byte.wonderhowto.com/how-to/osx-vm-image-install-guide-0170145/
 - If  `BIOS disk read error at sector: 00000011`, try choosing UEFI, F12 to enter boot loader and selecting boot device OR try another VM version
 - If stuck at BluetoothController, try choosing PIIX chipset
 - If stuck at about 2 minutes remaining, https://www.youtube.com/watch?v=Mx6KtptCePg
+
+## CMake Default Compiler Option
+
+    OPTION(MY_DEFINE "MY DEFINE" OFF)
+
+    MESSAGE(STATUS "MY_DEFINE=${MY_DEFINE}")
+
+    IF (${MY_DEFINE} MATCHES ON)
+        add_compile_options(-DMY_DEFINE)
+    ENDIF(${MY_DEFINE} MATCHES ON)
+
+Remember to remove cmake caches when this changes
