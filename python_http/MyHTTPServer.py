@@ -11,8 +11,20 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         self.end_headers()
         print("GET received!")
-        self.wfile.write(bytes("RESPONSE", "utf-8"))
+        self.wfile.write(bytes("GET RESPONSE", "utf-8"))
+    def do_POST(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        content_len = int(self.headers.get('Content-Length'))
+        post_body = self.rfile.read(content_len)
+        print("POST received!")
+        self.wfile.write(bytes("POST RESPONSE", "utf-8"))
 
 httpd = socketserver.TCPServer(("", PORT), MyHandler)
 print("serving at port", PORT)
-httpd.serve_forever()
+
+try:
+    httpd.serve_forever()
+finally:
+    httpd.server_close()
