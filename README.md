@@ -354,3 +354,20 @@ https://null-byte.wonderhowto.com/how-to/osx-vm-image-install-guide-0170145/
     ENDIF(${MY_DEFINE} MATCHES ON)
 
 Remember to remove cmake caches when this changes
+
+## Project Management
+
+- Assumptions Page before signing requirements
+- Consider adding "Verified by our own disgression" to avoid unexpected testing / verification procedures from clients
+- *How to avoid repeating effort?*
+- Design for testability
+- Design for reworkability
+- Requirement must be backed by evidence before signing off
+- Scope Trading
+- Prevent prototype to product creep (do not let customers treat prototype as product)
+- System diagram must be verifiable (every system block must have an associated test procedure)
+- Trusted suppliers / parts list
+- Project managers have better opportunity to look for opportunities than sales team
+- Limit customer point of contact with engineering team (also control information deliberately)
+- Site visit (during intended operation conditions) must be done ASAP, and ideally with sensors and actuators
+- Document every component including how to test and how to fix / replace
