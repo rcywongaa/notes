@@ -140,6 +140,10 @@ http://derekmolloy.ie/gpios-on-the-beaglebone-black-using-device-tree-overlays/
         return std::string(__FILE__).erase(std::string(__FILE__).rfind('/')) + "/";
     }
 
+## No-op default function pointer
+
+    void call_func(std::function<void()>func = []{})
+
 ## [Bring Up CAN Interface](https://www.elinux.org/Bringing_CAN_interface_up)
 
     sudo slcand -o -c -f -s6 /dev/ttyUSB0 canusb_name
