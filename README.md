@@ -165,6 +165,12 @@ http://derekmolloy.ie/gpios-on-the-beaglebone-black-using-device-tree-overlays/
 
     cmake --help-module-list
 
+## Starting common GUI applications from CLI
+
+    nm-connection-editor
+    gnome-control-center
+    unity-control-center
+
 ## Bumblebee / OpenGL
 
 ### OpenGL Libraries
