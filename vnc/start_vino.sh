@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# To be run on remote computer
+
 export DISPLAY=:1
 gsettings set org.gnome.Vino enabled true
 gsettings set org.gnome.Vino prompt-enabled false
