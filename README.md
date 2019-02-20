@@ -6,7 +6,7 @@ A bunch of random scribbles about random stuff that might randomly be useful
 
 ### Setting Static IP
 
-https://github.com/leesy24/BBB_Web_Manager/wiki/%5BBBB%5D-Set-static-IP-address-on-eth0
+<https://github.com/leesy24/BBB_Web_Manager/wiki/%5BBBB%5D-Set-static-IP-address-on-eth0>
 
 1. Get network interface name
 
@@ -77,9 +77,9 @@ https://github.com/leesy24/BBB_Web_Manager/wiki/%5BBBB%5D-Set-static-IP-address-
 
 #### dts documentation:
 
-https://github.com/torvalds/linux/blob/master/Documentation/devicetree/overlay-notes.txt
-https://github.com/beagleboard/linux/blob/master/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-http://derekmolloy.ie/gpios-on-the-beaglebone-black-using-device-tree-overlays/
+<https://github.com/torvalds/linux/blob/master/Documentation/devicetree/overlay-notes.txt>
+<https://github.com/beagleboard/linux/blob/master/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt>
+<http://derekmolloy.ie/gpios-on-the-beaglebone-black-using-device-tree-overlays/>
 
 ### Pinmux
 
@@ -95,9 +95,9 @@ http://derekmolloy.ie/gpios-on-the-beaglebone-black-using-device-tree-overlays/
 ## Raspberry
 
 - [Forward wireless through ethernet](https://major.io/2015/03/29/share-a-wireless-connection-via-ethernet-in-gnome-3-14/)
-- http://xmodulo.com/remote-control-raspberry-pi.html
-- http://downloads.raspberrypi.org/raspbian/release_notes.txt
-- https://www.raspberrypi.org/documentation/remote-access/vnc/
+- <http://xmodulo.com/remote-control-raspberry-pi.html>
+- <http://downloads.raspberrypi.org/raspbian/release_notes.txt>
+- <https://www.raspberrypi.org/documentation/remote-access/vnc/>
 - SSH disabled by default; can be enabled by creating a file with name "ssh" in BOOT partition (not /boot folder)
 
 ## Unsafe SSH
@@ -110,7 +110,7 @@ http://derekmolloy.ie/gpios-on-the-beaglebone-black-using-device-tree-overlays/
 
 ## Cross Compiling
 
-1. Download the correct toolchain (https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads)
+1. Download the correct toolchain (<https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads)>
 1. Export the toolchain prefix for ease of compiling
 
       export ARM_CC=”<toolchain_location>/gcc-xxxxxxx/bin/arm-xxxxxx”
@@ -161,13 +161,41 @@ http://derekmolloy.ie/gpios-on-the-beaglebone-black-using-device-tree-overlays/
 | s7            | 800 Kbit/s  |
 | s8            | 1000 Kbit/s |
 
-## CMake module path (for FindXXX.cmake)
+## CMake using a system library
 
-    usr/share/cmake/Modules/
+1. Check if corresponding cmake module exists
 
-## CMake check if module exists
+       cmake --help-module-list
+       find /usr -name -o "Find*.cmake"
 
-    cmake --help-module-list
+   If found (`FindXXX`), in `CMakeLists.txt`:
+
+       find_package(XXX REQUIRED)
+
+   See [module documentation](https://cmake.org/cmake/help/latest/manual/cmake-modules.7.html)
+   for options and variable names
+
+1. Search install location for `.cmake`
+
+       find /usr -name "*.cmake"
+
+   If `XXXConfig.cmake` found, in `CMakeLists.txt`:
+
+       find_package(XXX REQUIRED)
+
+   Open `XXXConfig.cmake` to find variable names (usually `XXX_INCLUDE_DIRS`, `XXX_LIBRARIES`)
+
+1. Search install location for `.pc` file
+
+       find /usr -name "*.pc" 
+
+   If `XXX.pc` found, in `CMakeLists.txt`
+
+       find_package(PkgConfig REQUIRED)
+       pkg_check_modules(NyName REQUIRED XXX)
+
+   Variable names: `MyName_LIBRARIES`, `MyName_INCLUDE_DIRS`
+   See [FindPkgConfig documentation](https://cmake.org/cmake/help/v3.0/module/FindPkgConfig.html)
 
 ## Starting common GUI applications from CLI
 
@@ -201,10 +229,10 @@ http://derekmolloy.ie/gpios-on-the-beaglebone-black-using-device-tree-overlays/
     - if two lines of output with different cards, bumblebee is needed
     - Note down the BusID (first few numbers, e.g. `01:00.0`)
 
-- http://askubuntu.com/questions/36930/is-a-nvidia-geforce-with-optimus-technology-supported-by-ubuntu/36936#36936
-- https://github.com/Bumblebee-Project/Bumblebee/wiki/Configuration
-- http://askubuntu.com/questions/131506/how-can-i-get-nvidia-cuda-or-opencl-working-on-a-laptop-with-nvidia-discrete-car
-- https://wiki.ubuntu.com/Bumblebee
+- <http://askubuntu.com/questions/36930/is-a-nvidia-geforce-with-optimus-technology-supported-by-ubuntu/36936#36936>
+- <https://github.com/Bumblebee-Project/Bumblebee/wiki/Configuration>
+- <http://askubuntu.com/questions/131506/how-can-i-get-nvidia-cuda-or-opencl-working-on-a-laptop-with-nvidia-discrete-car>
+- <https://wiki.ubuntu.com/Bumblebee>
 - Open Software & Updates --> Additional Drivers
 	- Select Nouveau
 
@@ -261,7 +289,7 @@ Uninstall bumblebee --> Uninstall drivers --> Re-install drivers
 
       sudo apt-get install nvidia-opencl-dev ocl-icd-libopencl1 opencl-headers nvidia-cuda-toolkit
 
-- http://wiki.tiker.net/OpenCLHowTo#Downloading_the_OpenCL_headers
+- <http://wiki.tiker.net/OpenCLHowTo#Downloading_the_OpenCL_headers>
 
 ### Nvidia Cuda
 
@@ -332,7 +360,7 @@ change `HandleLidSwitch=hibernate`
 
     dpkg -l
 
-http://askubuntu.com/questions/18804/what-do-the-various-dpkg-flags-like-ii-rc-mean
+<http://askubuntu.com/questions/18804/what-do-the-various-dpkg-flags-like-ii-rc-mean>
 
 ## [Restore Windows Bootloader after uninstalling grub](https://askubuntu.com/questions/429610/uninstall-grub-and-use-windows-bootloader)
 
@@ -345,13 +373,16 @@ http://askubuntu.com/questions/18804/what-do-the-various-dpkg-flags-like-ii-rc-m
 - `rqt_plot` breaks due to both PyQt4 and PyQt5
 - do not use anaconda & pip to install missing packages
 
+## [ROS `package.xml` rosdep key](https://github.com/ros/rosdistro/blob/master/rosdep/base.yaml)
+<https://docs.ros.org/kinetic/api/catkin/html/howto/format1/system_library_dependencies.html>
+
 ## Hackintosh Zone
 
-https://null-byte.wonderhowto.com/how-to/osx-vm-image-install-guide-0170145/
+<https://null-byte.wonderhowto.com/how-to/osx-vm-image-install-guide-0170145/>
 - If `Guru Meditation`, try reducing memory to 2048
 - If  `BIOS disk read error at sector: 00000011`, try choosing UEFI, F12 to enter boot loader and selecting boot device OR try another VM version
 - If stuck at BluetoothController, try choosing PIIX chipset
-- If stuck at about 2 minutes remaining, https://www.youtube.com/watch?v=Mx6KtptCePg
+- If stuck at about 2 minutes remaining, <https://www.youtube.com/watch?v=Mx6KtptCePg>
 
 ## CMake Default Compiler Option
 
@@ -364,6 +395,49 @@ https://null-byte.wonderhowto.com/how-to/osx-vm-image-install-guide-0170145/
     ENDIF(${MY_DEFINE} MATCHES ON)
 
 Remember to remove cmake caches when this changes
+
+## Make C++ Program Respond To SIGINT
+
+    #include <signal.h>
+
+    void sigint_handler(int s){
+        printf("--- SIGINT ---\n");
+        isContinue = false;
+    }
+
+    int main(int argc, char** argv)
+    {
+        signal(SIGINT, sigint_handler);
+    }
+
+## OpenCV
+
+- Quickly create matrix of certain color
+
+      color_hsv = np.zeros((100, 100, 3), dtype=np.uint8)
+      color_hsv[:,:,0] = color_H
+      color_hsv[:,:,1] = color_S
+      color_hsv[:,:,2] = color_V
+
+- Matrix are indexed [row, col], points are indexed [x, y]
+
+## XMLRPC
+
+- [XMLRPC CLI](http://xmlrpc-c.sourceforge.net/doc/xmlrpc.html)
+- List available methods
+
+    xmlrpc http://localhost:8080/RPC2 system.listMethods 
+
+## C++ `unique_ptr`
+
+`std::move` only nulls pointer if the returning value is assigned
+
+    auto other_ptr = std::move(ptr); // Nulls the ptr
+    std::move(other_ptr); // Does not null other_ptr
+
+## [Get Total Memory Usage](https://unix.stackexchange.com/questions/288589/get-chromes-total-memory-usage)
+
+    smem -t -k -c pss -P /opt/google/chrome | tail -n 1
 
 ## Project Management
 
