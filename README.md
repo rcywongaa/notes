@@ -344,6 +344,10 @@ Uninstall bumblebee --> Uninstall drivers --> Re-install drivers
 
     git diff -U0 -w --no-color | git apply --cached --ignore-whitespace --unidiff-zero -
 
+## Find which package provides command
+
+    dpkg -S $(which <command>)
+
 ## Purging removed packages
 
     apt-get purge $(dpkg -l | awk '/^rc/ { print $2 }')
