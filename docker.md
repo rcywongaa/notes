@@ -175,3 +175,5 @@ Note that variable expansion occurs outside container, to make it occur inside:
 
     docker exec container bash -c 'echo "$ENV_VAR"'
 
+### Extra resources / examples
+<https://github.com/15Dkatz/docker-guides>
