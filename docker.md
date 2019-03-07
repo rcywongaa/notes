@@ -122,7 +122,7 @@ To expose it to be accessible through `<host_ip>:<host_port>`
 ### Move container to new network
 
     docker network disconnect <old_network_name> <container_name>
-    docker network connect <new_network_name> <container_name>
+    docker network connect --ip <desired_ip> <new_network_name> <container_name>
 
 ## Useful tools to install
 

@@ -2,9 +2,9 @@
 
 A bunch of random scribbles about random stuff that might randomly be useful
 
-## Beaglebone
+## Embedded Linux
 
-### Setting Static IP
+### Setting Static IP (Beaglebone)
 
 <https://github.com/leesy24/BBB_Web_Manager/wiki/%5BBBB%5D-Set-static-IP-address-on-eth0>
 
@@ -92,59 +92,7 @@ A bunch of random scribbles about random stuff that might randomly be useful
 ### Set I2C chip
     i2cset -y 0 0x60 0x40 0x00FF w
 
-## Raspberry
-
-- [Forward wireless through ethernet](https://major.io/2015/03/29/share-a-wireless-connection-via-ethernet-in-gnome-3-14/)
-- <http://xmodulo.com/remote-control-raspberry-pi.html>
-- <http://downloads.raspberrypi.org/raspbian/release_notes.txt>
-- <https://www.raspberrypi.org/documentation/remote-access/vnc/>
-- SSH disabled by default; can be enabled by creating a file with name "ssh" in BOOT partition (not /boot folder)
-
-## Unsafe SSH
-
-    ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@ip
-
-## SSH with `sudo` (BAD)
-
-    sshpass -p “ssh_password” ssh user@ip 'echo "sudo_password" | sudo -S my_cmd'
-
-## Cross Compiling
-
-1. Download the correct toolchain (<https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads)>
-1. Export the toolchain prefix for ease of compiling
-
-      export ARM_CC=”<toolchain_location>/gcc-xxxxxxx/bin/arm-xxxxxx”
-
-1. Setup cmake to use cross compiler
-
-       cmake .. -DCMAKE_C_COMPILER="$ARM_CC"-gcc -DCMAKE_CXX_COMPILER="$ARM_CC"-g++
-
-   OR use a [toolchain file](https://gitlab.kitware.com/cmake/community/wikis/doc/cmake/CrossCompiling)
-
-## `getBinDir()`
-
-    inline const std::string getBinDir()
-    {
-        const unsigned int LEN = 128;
-        char buf[LEN];
-        readlink("/proc/self/exe", buf, LEN);
-        std::string bin_path(buf);
-        bin_path.erase(bin_path.rfind('/'));
-        return bin_path + "/";
-    }
-
-## `getSrcDir()`
-
-    inline const std::string getSrcDir()
-    {
-        return std::string(__FILE__).erase(std::string(__FILE__).rfind('/')) + "/";
-    }
-
-## No-op default function pointer
-
-    void call_func(std::function<void()>func = []{})
-
-## [Bring Up CAN Interface](https://www.elinux.org/Bringing_CAN_interface_up)
+### [Bring Up CAN Interface](https://www.elinux.org/Bringing_CAN_interface_up)
 
     sudo slcand -o -c -f -s6 /dev/ttyUSB0 canusb_name
     sudo ip link set canusb_name up
@@ -161,7 +109,176 @@ A bunch of random scribbles about random stuff that might randomly be useful
 | s7            | 800 Kbit/s  |
 | s8            | 1000 Kbit/s |
 
-## CMake using a system library
+#### Raspberry
+
+- [Forward wireless through ethernet](https://major.io/2015/03/29/share-a-wireless-connection-via-ethernet-in-gnome-3-14/)
+- <http://xmodulo.com/remote-control-raspberry-pi.html>
+- <http://downloads.raspberrypi.org/raspbian/release_notes.txt>
+- <https://www.raspberrypi.org/documentation/remote-access/vnc/>
+- SSH disabled by default; can be enabled by creating a file with name "ssh" in BOOT partition (not /boot folder)
+
+## Bash / Linux
+
+### `rsync` for remote build
+
+Note that `rsync` treats `directory` and `directory/` differently, unlike `cp`
+
+    rsync -r --delete --exclude build --exclude devel ../project/ <host@ip:project>
+
+OR
+
+    rsync -r --delete --exclude build --exclude devel . <host@ip:project>
+
+### Scan IPs
+
+    sudo arp-scan --interface=enp0s31f6 --local
+
+### Unsafe SSH
+
+    ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@ip
+
+### SSH with `sudo` (BAD)
+
+    sshpass -p “ssh_password” ssh user@ip 'echo "sudo_password" | sudo -S my_cmd'
+
+### [Get Script Directory](https://stackoverflow.com/questions/59895/get-the-source-directory-of-a-bash-script-from-within-the-script-itself)
+
+    dirname "$(readlink -f "$0")"
+
+### Starting common GUI applications from CLI
+
+    nm-connection-editor
+    gnome-control-center
+    unity-control-center
+
+### View Image (Eye Of Gnome)
+
+    eog
+
+### [Mount dual boot hard drive as read only](http://www.hecticgeek.com/2012/10/make-ntfs-partitions-read-only-in-ubuntu/)
+
+### Enable core dump
+
+    sudo echo "	* soft core 100000" >> /etc/security/limits.conf
+        * soft core 100000
+    sudo vim /etc/sysctl.conf
+        kernel.core_pattern=core_%t
+    sudo sysctl --system
+    ulimit -c unlimited
+
+### Important server config files
+
+    /var/www/<site>/public/.htaccess
+    /etc/apache2/sites-available/<site>.com.conf
+
+### vi-like commandline controls
+
+    set -o vi
+
+### [Reasons to hate Linux](http://itvision.altervista.org/why.linux.is.not.ready.for.the.desktop.current.html)
+
+### Window manipulation
+
+- devilspie2
+- wmctrl
+
+### [Resize home / root partitions](https://unix.stackexchange.com/questions/213245/increase-root-partition-by-reducing-home)
+
+### [Git only stage non-whitespace changes](https://stackoverflow.com/questions/3515597/add-only-non-whitespace-changes)
+
+    git diff -U0 -w --no-color | git apply --cached --ignore-whitespace --unidiff-zero -
+
+### Find which package provides command
+
+    dpkg -S $(which <command>)
+
+### Purging removed packages
+
+    apt-get purge $(dpkg -l | awk '/^rc/ { print $2 }')
+
+### [Hibernate on close lid](https://help.ubuntu.com/16.04/ubuntu-help/power-hibernate.html)
+
+    sudo vim /etc/systemd/logind.conf
+
+change `HandleLidSwitch=hibernate`
+
+    sudo systemctl restart systemd-logind.service
+
+### List all installed packages
+
+    dpkg -l
+
+<http://askubuntu.com/questions/18804/what-do-the-various-dpkg-flags-like-ii-rc-mean>
+
+### [Restore Windows Bootloader after uninstalling grub](https://askubuntu.com/questions/429610/uninstall-grub-and-use-windows-bootloader)
+
+    c:\> bootsect /nt60 <drive name>: /mbr
+
+### ROS Dependencies (Fedora)
+
+    sudo dnf install --skip-broken python-empy console-bridge console-bridge-devel poco-devel boost boost-devel eigen3-devel pyqt4 qt-devel gcc gcc-c++ python-devel sip sip-devel tinyxml tinyxml-devel qt-devel qt5-devel python-qt5-devel sip sip-devel python3-sip python3-sip-devel qconf curl curl-devel gtest gtest-devel lz4-devel urdfdom-devel assimp-devel qhull-devel qhull uuid uuid-devel uuid-c++ uuid-c++-devel libuuid libuuid-devel gazebo gazebo-devel collada-dom collada-dom-devel yaml-cpp yaml-cpp-devel python2-defusedxml python-netifaces pyparsing pydot python-pyqtgraph python2-matplotlib 
+
+- `rqt_plot` breaks due to both PyQt4 and PyQt5
+- do not use anaconda & pip to install missing packages
+
+### [ROS `package.xml` rosdep key](https://github.com/ros/rosdistro/blob/master/rosdep/base.yaml)
+<https://docs.ros.org/kinetic/api/catkin/html/howto/format1/system_library_dependencies.html>
+
+### [Get Total Memory Usage](https://unix.stackexchange.com/questions/288589/get-chromes-total-memory-usage)
+
+    smem -t -k -c pss -P /opt/google/chrome | tail -n 1
+
+### Recover from accidentally clearing home directory
+
+    cp -r /etc/skel/.* ~
+
+## C / C++ / CMake
+
+### Cross Compiling
+
+1. Download the correct toolchain (<https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads)>
+1. Export the toolchain prefix for ease of compiling
+
+      export ARM_CC=”<toolchain_location>/gcc-xxxxxxx/bin/arm-xxxxxx”
+
+1. Setup cmake to use cross compiler
+
+       cmake .. -DCMAKE_C_COMPILER="$ARM_CC"-gcc -DCMAKE_CXX_COMPILER="$ARM_CC"-g++
+
+   OR use a [toolchain file](https://gitlab.kitware.com/cmake/community/wikis/doc/cmake/CrossCompiling)
+
+### `getBinDir()`
+
+    inline const std::string getBinDir()
+    {
+        const unsigned int LEN = 128;
+        char buf[LEN];
+        readlink("/proc/self/exe", buf, LEN);
+        std::string bin_path(buf);
+        bin_path.erase(bin_path.rfind('/'));
+        return bin_path + "/";
+    }
+
+### `getSrcDir()`
+
+    inline const std::string getSrcDir()
+    {
+        return std::string(__FILE__).erase(std::string(__FILE__).rfind('/')) + "/";
+    }
+
+### No-op default function pointer
+
+    void call_func(std::function<void()>func = []{})
+
+### `std::mutex`
+Always consider whether or not the mutex should be `static` or not
+
+    {
+        std::lock_guard<std::mutex> lock(mtx);
+        ...
+    }
+
+### CMake using a system library
 
 1. Check if corresponding cmake module exists
 
@@ -197,11 +314,62 @@ A bunch of random scribbles about random stuff that might randomly be useful
    Variable names: `MyName_LIBRARIES`, `MyName_INCLUDE_DIRS`
    See [FindPkgConfig documentation](https://cmake.org/cmake/help/v3.0/module/FindPkgConfig.html)
 
-## Starting common GUI applications from CLI
+### CMake Default Compiler Option
 
-    nm-connection-editor
-    gnome-control-center
-    unity-control-center
+    OPTION(MY_DEFINE "MY DEFINE" OFF)
+
+    MESSAGE(STATUS "MY_DEFINE=${MY_DEFINE}")
+
+    IF (${MY_DEFINE} MATCHES ON)
+        add_compile_options(-DMY_DEFINE)
+    ENDIF(${MY_DEFINE} MATCHES ON)
+
+Remember to remove cmake caches when this changes
+
+### Make C++ Program Respond To SIGINT
+
+    #include <signal.h>
+
+    void sigint_handler(int s){
+        printf("--- SIGINT ---\n");
+        isContinue = false;
+    }
+
+    int main(int argc, char** argv)
+    {
+        signal(SIGINT, sigint_handler);
+    }
+
+### C++ `unique_ptr`
+
+`std::move` only nulls pointer if the returning value is assigned
+
+    auto other_ptr = std::move(ptr); // Nulls the ptr
+    std::move(other_ptr); // Does not null other_ptr
+
+### `static` member gotchas
+
+      class Class1
+      {
+          public:
+              Class1() {}
+              void hello() {}
+      };
+   
+      class Class2
+      {
+          public:
+              Class2() {}
+              static Class1 class1;
+      };
+
+      Class1 Class2::class1; // Don't forget this!
+
+      int main(int argc, char** argv)
+      {
+          Class2 class2;
+          class2.class1.hello();
+      };
 
 ## Bumblebee / OpenGL
 
@@ -307,79 +475,6 @@ Uninstall bumblebee --> Uninstall drivers --> Re-install drivers
 
     lspsi -v | grep “vga\|3d\|2d”
 
-## View Image (Eye Of Gnome)
-
-    eog
-
-## [Mount dual boot hard drive as read only](http://www.hecticgeek.com/2012/10/make-ntfs-partitions-read-only-in-ubuntu/)
-
-## Enable core dump
-
-    sudo echo "	* soft core 100000" >> /etc/security/limits.conf
-        * soft core 100000
-    sudo vim /etc/sysctl.conf
-        kernel.core_pattern=core_%t
-    sudo sysctl --system
-    ulimit -c unlimited
-
-## Important server config files
-
-    /var/www/<site>/public/.htaccess
-    /etc/apache2/sites-available/<site>.com.conf
-
-## vi-like commandline controls
-
-    set -o vi
-
-## [Reasons to hate Linux](http://itvision.altervista.org/why.linux.is.not.ready.for.the.desktop.current.html)
-
-## Window manipulation
-
-- devilspie2
-- wmctrl
-
-## [Resize home / root partitions](https://unix.stackexchange.com/questions/213245/increase-root-partition-by-reducing-home)
-
-## [Git only stage non-whitespace changes](https://stackoverflow.com/questions/3515597/add-only-non-whitespace-changes)
-
-    git diff -U0 -w --no-color | git apply --cached --ignore-whitespace --unidiff-zero -
-
-## Find which package provides command
-
-    dpkg -S $(which <command>)
-
-## Purging removed packages
-
-    apt-get purge $(dpkg -l | awk '/^rc/ { print $2 }')
-
-## [Hibernate on close lid](https://help.ubuntu.com/16.04/ubuntu-help/power-hibernate.html)
-
-    sudo vim /etc/systemd/logind.conf
-
-change `HandleLidSwitch=hibernate`
-
-    sudo systemctl restart systemd-logind.service
-
-## List all installed packages
-
-    dpkg -l
-
-<http://askubuntu.com/questions/18804/what-do-the-various-dpkg-flags-like-ii-rc-mean>
-
-## [Restore Windows Bootloader after uninstalling grub](https://askubuntu.com/questions/429610/uninstall-grub-and-use-windows-bootloader)
-
-    c:\> bootsect /nt60 <drive name>: /mbr
-
-## ROS Dependencies (Fedora)
-
-    sudo dnf install --skip-broken python-empy console-bridge console-bridge-devel poco-devel boost boost-devel eigen3-devel pyqt4 qt-devel gcc gcc-c++ python-devel sip sip-devel tinyxml tinyxml-devel qt-devel qt5-devel python-qt5-devel sip sip-devel python3-sip python3-sip-devel qconf curl curl-devel gtest gtest-devel lz4-devel urdfdom-devel assimp-devel qhull-devel qhull uuid uuid-devel uuid-c++ uuid-c++-devel libuuid libuuid-devel gazebo gazebo-devel collada-dom collada-dom-devel yaml-cpp yaml-cpp-devel python2-defusedxml python-netifaces pyparsing pydot python-pyqtgraph python2-matplotlib 
-
-- `rqt_plot` breaks due to both PyQt4 and PyQt5
-- do not use anaconda & pip to install missing packages
-
-## [ROS `package.xml` rosdep key](https://github.com/ros/rosdistro/blob/master/rosdep/base.yaml)
-<https://docs.ros.org/kinetic/api/catkin/html/howto/format1/system_library_dependencies.html>
-
 ## Hackintosh Zone
 
 <https://null-byte.wonderhowto.com/how-to/osx-vm-image-install-guide-0170145/>
@@ -387,32 +482,6 @@ change `HandleLidSwitch=hibernate`
 - If  `BIOS disk read error at sector: 00000011`, try choosing UEFI, F12 to enter boot loader and selecting boot device OR try another VM version
 - If stuck at BluetoothController, try choosing PIIX chipset
 - If stuck at about 2 minutes remaining, <https://www.youtube.com/watch?v=Mx6KtptCePg>
-
-## CMake Default Compiler Option
-
-    OPTION(MY_DEFINE "MY DEFINE" OFF)
-
-    MESSAGE(STATUS "MY_DEFINE=${MY_DEFINE}")
-
-    IF (${MY_DEFINE} MATCHES ON)
-        add_compile_options(-DMY_DEFINE)
-    ENDIF(${MY_DEFINE} MATCHES ON)
-
-Remember to remove cmake caches when this changes
-
-## Make C++ Program Respond To SIGINT
-
-    #include <signal.h>
-
-    void sigint_handler(int s){
-        printf("--- SIGINT ---\n");
-        isContinue = false;
-    }
-
-    int main(int argc, char** argv)
-    {
-        signal(SIGINT, sigint_handler);
-    }
 
 ## OpenCV
 
@@ -431,17 +500,6 @@ Remember to remove cmake caches when this changes
 - List available methods
 
     xmlrpc http://localhost:8080/RPC2 system.listMethods 
-
-## C++ `unique_ptr`
-
-`std::move` only nulls pointer if the returning value is assigned
-
-    auto other_ptr = std::move(ptr); // Nulls the ptr
-    std::move(other_ptr); // Does not null other_ptr
-
-## [Get Total Memory Usage](https://unix.stackexchange.com/questions/288589/get-chromes-total-memory-usage)
-
-    smem -t -k -c pss -P /opt/google/chrome | tail -n 1
 
 ## Project Management
 
