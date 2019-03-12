@@ -371,6 +371,32 @@ Remember to remove cmake caches when this changes
           class2.class1.hello();
       };
 
+## Python
+
+### Create multiple tests for multiple inputs
+<https://stackoverflow.com/a/3772008/3177701>
+
+    import unittest
+
+    # Define a TestCase that takes the test-specific input as constructor parameter
+    class Test_my_func(unittest.TestCase):
+        def __init__(self, input):
+            super(Test_my_func, self).__init__()
+            self.input = input
+
+        def runTest(self):
+            self.assertAlmostEqual(my_func(self.input), expected_output, delta=TOLERANCE)
+
+    # Create test suite of different tests, each using a different input
+    def suite():
+        suite = unittest.TestSuite()
+        suite.addTests(Test_my_func(input) for input in inputs)
+        return suite
+
+    # Run test suite
+    if __name__ == '__main__':
+        unittest.TextTestRunner().run(suite())
+
 ## Bumblebee / OpenGL
 
 ### OpenGL Libraries
