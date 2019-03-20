@@ -397,6 +397,24 @@ Remember to remove cmake caches when this changes
     if __name__ == '__main__':
         unittest.TextTestRunner().run(suite())
 
+### Argparse multiple positional and optional arguments
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--optional1', help='Help message for optional1', action="store_true")
+    parser.add_argument('--optional2', help='Help message for optional2', action="store_true")
+    parser.add_argument('positional', metavar='positional', type=str, help='Help message for positional')
+    args = parser.parse_args()
+
+    if arg.optional1:
+        print("optional1 == True")
+    if arg.optional2:
+        print("optional2 == True")
+    print(arg.positional)
+
+### Get Current Directory
+
+    curr_dir = os.path.dirname(os.path.abspath(__file__))
+
 ## Bumblebee / OpenGL
 
 ### OpenGL Libraries
