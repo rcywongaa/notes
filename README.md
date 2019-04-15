@@ -66,7 +66,7 @@ A bunch of random scribbles about random stuff that might randomly be useful
         };
 
     - `am33xx_pinmux` comes from [amc335x-boneblack-common.dtsi](https://github.com/beagleboard/linux/blob/master/arch/arm/boot/dts/am335x-boneblack-common.dtsi) and [amc335x-bone-common.dtsi](https://github.com/beagleboard/linux/blob/master/arch/arm/boot/dts/am335x-bone-common.dtsi)
-        
+
       Notice that we are overriding the pin modes specified under am33xx_pinmux
 
     - [`ti,beaglebone`](https://github.com/beagleboard/linux/blob/7a920684860a790099061b67961d0b5ffa033fdf/Documentation/misc-devices/bone_capemgr.txt)
@@ -216,7 +216,7 @@ change `HandleLidSwitch=hibernate`
 
 ### ROS Dependencies (Fedora)
 
-    sudo dnf install --skip-broken python-empy console-bridge console-bridge-devel poco-devel boost boost-devel eigen3-devel pyqt4 qt-devel gcc gcc-c++ python-devel sip sip-devel tinyxml tinyxml-devel qt-devel qt5-devel python-qt5-devel sip sip-devel python3-sip python3-sip-devel qconf curl curl-devel gtest gtest-devel lz4-devel urdfdom-devel assimp-devel qhull-devel qhull uuid uuid-devel uuid-c++ uuid-c++-devel libuuid libuuid-devel gazebo gazebo-devel collada-dom collada-dom-devel yaml-cpp yaml-cpp-devel python2-defusedxml python-netifaces pyparsing pydot python-pyqtgraph python2-matplotlib 
+    sudo dnf install --skip-broken python-empy console-bridge console-bridge-devel poco-devel boost boost-devel eigen3-devel pyqt4 qt-devel gcc gcc-c++ python-devel sip sip-devel tinyxml tinyxml-devel qt-devel qt5-devel python-qt5-devel sip sip-devel python3-sip python3-sip-devel qconf curl curl-devel gtest gtest-devel lz4-devel urdfdom-devel assimp-devel qhull-devel qhull uuid uuid-devel uuid-c++ uuid-c++-devel libuuid libuuid-devel gazebo gazebo-devel collada-dom collada-dom-devel yaml-cpp yaml-cpp-devel python2-defusedxml python-netifaces pyparsing pydot python-pyqtgraph python2-matplotlib
 
 - `rqt_plot` breaks due to both PyQt4 and PyQt5
 - do not use anaconda & pip to install missing packages
@@ -231,6 +231,10 @@ change `HandleLidSwitch=hibernate`
 ### Recover from accidentally clearing home directory
 
     cp -r /etc/skel/.* ~
+
+### Test audio with sample sounds (may require sudo if not in `audio` group)
+
+    aplay /usr/share/sounds/alsa/Noise.wav
 
 ## C / C++ / CMake
 
@@ -304,7 +308,7 @@ Always consider whether or not the mutex should be `static` or not
 
 1. Search install location for `.pc` file
 
-       find /usr -name "*.pc" 
+       find /usr -name "*.pc"
 
    If `XXX.pc` found, in `CMakeLists.txt`
 
@@ -355,7 +359,7 @@ Remember to remove cmake caches when this changes
               Class1() {}
               void hello() {}
       };
-   
+
       class Class2
       {
           public:
@@ -446,7 +450,7 @@ Remember to remove cmake caches when this changes
 - <http://askubuntu.com/questions/131506/how-can-i-get-nvidia-cuda-or-opencl-working-on-a-laptop-with-nvidia-discrete-car>
 - <https://wiki.ubuntu.com/Bumblebee>
 - Open Software & Updates --> Additional Drivers
-	- Select Nouveau
+    - Select Nouveau
 
 - Installation
 
@@ -461,13 +465,13 @@ Remember to remove cmake caches when this changes
       update-alternatives nvidia
       vim /etc/bumblebee/bumblebee.conf
 
-          ... 
+          ...
           [bumblebeed]
               Driver=nvidia
           ...
 
       :%s/nvidia-current/nvidia-[installed version]/g
-	
+
     - Make sure BusID is correct (if `01:00.0`)
 
           vim /etc/bumblebee/xorg.conf.nvidia
@@ -543,7 +547,7 @@ Uninstall bumblebee --> Uninstall drivers --> Re-install drivers
 - [XMLRPC CLI](http://xmlrpc-c.sourceforge.net/doc/xmlrpc.html)
 - List available methods
 
-    xmlrpc http://localhost:8080/RPC2 system.listMethods 
+    xmlrpc http://localhost:8080/RPC2 system.listMethods
 
 ## Project Management
 
