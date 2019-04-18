@@ -74,7 +74,7 @@ Standard name of Dockerfile is `Dockerfile`
    RUN apt update && apt install -y openssh-server
    RUN mkdir -p /var/run/sshd
    # Assuming there exists file directory/script.sh
-   COPY directory /directory
+   COPY directory /directory/
    RUN chmod 777 /directory/script.sh
    CMD ["/directory/script.sh"]
    CMD ["echo","hello world"]
@@ -134,7 +134,11 @@ To expose it to be accessible through `<host_ip>:<host_port>`
 
 ### Docker Run (= docker create + docker start + docker attach)
 
-    docker run -it --name=<container_name> <command>
+    docker run -it --rm --name=<container_name> <command>
+
+- `-i` to create interactive session
+- `-t` to use tty
+- `--rm` to automatically remove on exit
 
 ### List currently running docker instances
 

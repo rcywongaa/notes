@@ -214,16 +214,6 @@ change `HandleLidSwitch=hibernate`
 
     c:\> bootsect /nt60 <drive name>: /mbr
 
-### ROS Dependencies (Fedora)
-
-    sudo dnf install --skip-broken python-empy console-bridge console-bridge-devel poco-devel boost boost-devel eigen3-devel pyqt4 qt-devel gcc gcc-c++ python-devel sip sip-devel tinyxml tinyxml-devel qt-devel qt5-devel python-qt5-devel sip sip-devel python3-sip python3-sip-devel qconf curl curl-devel gtest gtest-devel lz4-devel urdfdom-devel assimp-devel qhull-devel qhull uuid uuid-devel uuid-c++ uuid-c++-devel libuuid libuuid-devel gazebo gazebo-devel collada-dom collada-dom-devel yaml-cpp yaml-cpp-devel python2-defusedxml python-netifaces pyparsing pydot python-pyqtgraph python2-matplotlib
-
-- `rqt_plot` breaks due to both PyQt4 and PyQt5
-- do not use anaconda & pip to install missing packages
-
-### [ROS `package.xml` rosdep key](https://github.com/ros/rosdistro/blob/master/rosdep/base.yaml)
-<https://docs.ros.org/kinetic/api/catkin/html/howto/format1/system_library_dependencies.html>
-
 ### [Get Total Memory Usage](https://unix.stackexchange.com/questions/288589/get-chromes-total-memory-usage)
 
     smem -t -k -c pss -P /opt/google/chrome | tail -n 1
@@ -374,6 +364,40 @@ Remember to remove cmake caches when this changes
           Class2 class2;
           class2.class1.hello();
       };
+
+## ROS
+
+### ROS Dependencies (Fedora)
+
+    sudo dnf install --skip-broken python-empy console-bridge console-bridge-devel poco-devel boost boost-devel eigen3-devel pyqt4 qt-devel gcc gcc-c++ python-devel sip sip-devel tinyxml tinyxml-devel qt-devel qt5-devel python-qt5-devel sip sip-devel python3-sip python3-sip-devel qconf curl curl-devel gtest gtest-devel lz4-devel urdfdom-devel assimp-devel qhull-devel qhull uuid uuid-devel uuid-c++ uuid-c++-devel libuuid libuuid-devel gazebo gazebo-devel collada-dom collada-dom-devel yaml-cpp yaml-cpp-devel python2-defusedxml python-netifaces pyparsing pydot python-pyqtgraph python2-matplotlib
+
+- `rqt_plot` breaks due to both PyQt4 and PyQt5
+- do not use anaconda & pip to install missing packages
+
+### [ROS `package.xml` rosdep key](https://github.com/ros/rosdistro/blob/master/rosdep/base.yaml)
+<https://docs.ros.org/kinetic/api/catkin/html/howto/format1/system_library_dependencies.html>
+
+### CMakeLists.txt for libraries
+```
+project(my_package_name) # Must match package name defined in package.xml
+...
+catkin_package(
+  INCLUDE_DIRS include
+  LIBRARIES my_library_name # Must match library name defined in add_library(my_library_name ...)
+)
+...
+add_library(my_library_name src/CountedTryFunc.cpp)
+add_dependencies(my_library_name ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_include_directories(my_library_name PUBLIC ${PROJECT_SOURCE_DIR}/include)
+...
+install(
+  TARGETS
+  my_library_name
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+```
 
 ## Python
 
@@ -530,17 +554,6 @@ Uninstall bumblebee --> Uninstall drivers --> Re-install drivers
 - If  `BIOS disk read error at sector: 00000011`, try choosing UEFI, F12 to enter boot loader and selecting boot device OR try another VM version
 - If stuck at BluetoothController, try choosing PIIX chipset
 - If stuck at about 2 minutes remaining, <https://www.youtube.com/watch?v=Mx6KtptCePg>
-
-## OpenCV
-
-- Quickly create matrix of certain color
-
-      color_hsv = np.zeros((100, 100, 3), dtype=np.uint8)
-      color_hsv[:,:,0] = color_H
-      color_hsv[:,:,1] = color_S
-      color_hsv[:,:,2] = color_V
-
-- Matrix are indexed [row, col], points are indexed [x, y]
 
 ## XMLRPC
 
