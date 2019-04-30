@@ -308,6 +308,17 @@ Always consider whether or not the mutex should be `static` or not
    Variable names: `MyName_LIBRARIES`, `MyName_INCLUDE_DIRS`
    See [FindPkgConfig documentation](https://cmake.org/cmake/help/v3.0/module/FindPkgConfig.html)
 
+### [CMake `find_package` fallback](https://stackoverflow.com/questions/50978724/how-can-i-make-find-package-search-with-config-mode-and-fallback-on-module-mode)
+
+    # First time do not use common *REQUIRED* but use QUIET for do not output error messages on fail.
+    find_package(XXX CONFIG QUIET)
+    if(NOT XXX_FOUND)
+        # Previous call has been failed. Fallback with MODULE mode.
+        find_package(XXX MODULE REQUIRED) # Now it is OK to use REQUIRED if needed.
+        # ... There could be additional actions for wrap result "as if" CONFIG mode.
+    endif()
+    # ... use XXX
+
 ### CMake Default Compiler Option
 
     OPTION(MY_DEFINE "MY DEFINE" OFF)
