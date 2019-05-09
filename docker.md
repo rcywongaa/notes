@@ -92,6 +92,15 @@ Standard name of Dockerfile is `Dockerfile`
 
        docker run --name=my_container_name <image_name>:<tag_name> echo "override CMD"
 
+### Give user sudo permission
+```
+FROM ubuntu:14.04
+RUN useradd --create-home --shell /bin/bash username
+RUN echo "username ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+USER username
+WORKDIR /home/username
+```
+
 ## Docker Networking
 
 By default, all docker containers are connected together via a shared virtual network
