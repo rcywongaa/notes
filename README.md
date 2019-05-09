@@ -125,7 +125,7 @@ Note that `rsync` treats `directory` and `directory/` differently, unlike `cp`
 
     rsync -r --delete --exclude build --exclude devel ../project/ <host@ip:project>
 
-OR
+OR (if already in `project/` directory)
 
     rsync -r --delete --exclude build --exclude devel . <host@ip:project>
 
@@ -137,19 +137,45 @@ OR
 
     ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@ip
 
+### Unsafe rsync
+
+    rsync -e "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+
 ### SSH with `sudo` (BAD)
 
     sshpass -p “ssh_password” ssh user@ip 'echo "sudo_password" | sudo -S my_cmd'
 
 ### [Get Script Directory](https://stackoverflow.com/questions/59895/get-the-source-directory-of-a-bash-script-from-within-the-script-itself)
 
-    dirname "$(readlink -f "$0")"
+    DIR=$(dirname "$(readlink -f "$0")")
 
 ### Starting common GUI applications from CLI
 
     nm-connection-editor
     gnome-control-center
     unity-control-center
+
+### Help message for bash scripts
+```
+DIR=$(dirname "$(readlink -f "$0")")
+
+if [[ -z "$1" || "$1" == "-h" ]]; then
+    printf -- "USAGE: update_pos.sh IP_ADDRESS [-1]\n"
+    printf -- "-1: Do first time setup\n"
+    exit -1
+fi
+```
+
+### Script with sudo and regular commands
+- Run script with sudo / as root
+```
+sudo root_commands
+
+su user <<EOF
+user_commands
+EOF
+```
+- Note that after running `su`, subsequent commands are run in the home directory of the user
 
 ### View Image (Eye Of Gnome)
 
@@ -331,6 +357,13 @@ Always consider whether or not the mutex should be `static` or not
 
 Remember to remove cmake caches when this changes
 
+### Use specific C++ standard in CMake
+```
+cmake_minimum_required(VERSION 3.0.0)
+set (CMAKE_CXX_STANDARD 11)
+project(xxx)
+```
+
 ### Make C++ Program Respond To SIGINT
 
     #include <signal.h>
@@ -408,6 +441,29 @@ install(
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+```
+
+### CMakeLists.txt for header only libraries (CMake 3.0+ only)
+<https://cmake.org/cmake/help/v3.2/manual/cmake-buildsystem.7.html#interface-libraries>
+
+```
+include_directories(include)
+
+catkin_package(
+    INCLUDE_DIRS include
+)
+
+add_library(${PROJECT_NAME} INTERFACE)
+target_include_directories(${PROJECT_NAME} INTERFACE include)
+```
+
+### ROS assumes robot is facing +x direction
+
+## Eigen
+
+### Initialize constant Eigen::Matrix
+```
+Eigen::Matrix3d A((Eigen::Matrix3d() << 1, 2, 3, 4, 5, 6, 7, 8, 9).finished());
 ```
 
 ## Python
