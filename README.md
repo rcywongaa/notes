@@ -117,7 +117,7 @@ A bunch of random scribbles about random stuff that might randomly be useful
 - <https://www.raspberrypi.org/documentation/remote-access/vnc/>
 - SSH disabled by default; can be enabled by creating a file with name "ssh" in BOOT partition (not /boot folder)
 
-## Bash / Linux
+## Linux
 
 ### `rsync` for remote build
 
@@ -154,17 +154,6 @@ OR (if already in `project/` directory)
     nm-connection-editor
     gnome-control-center
     unity-control-center
-
-### Help message for bash scripts
-```
-DIR=$(dirname "$(readlink -f "$0")")
-
-if [[ -z "$1" || "$1" == "-h" ]]; then
-    printf -- "USAGE: update_pos.sh IP_ADDRESS [-1]\n"
-    printf -- "-1: Do first time setup\n"
-    exit -1
-fi
-```
 
 ### Script with sudo and regular commands
 - Run script with sudo / as root
