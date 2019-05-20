@@ -463,7 +463,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE include)
 
 ### Initialize constant Eigen::Matrix
 ```
-Eigen::Matrix3d A((Eigen::Matrix3d() << 1, 2, 3, 4, 5, 6, 7, 8, 9).finished());
+const Eigen::Matrix3d A((Eigen::Matrix3d() << 1, 2, 3, 4, 5, 6, 7, 8, 9).finished());
 ```
 
 ## Python
