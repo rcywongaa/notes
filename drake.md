@@ -7,3 +7,11 @@
       DRAKE_DEFINE_CLASS_TEMPLATE_INSTANTIATIONS_ON_DEFAULT_SCALARS(
       class MyClass)
 - `<geometry><mesh>` only supports `.obj` objects
+- `FixInputPort` requires the context of the corresponding port. The context can be taken with `diagram->GetMutableSubsystemContext(my_subsystem, diagram_context.get())`
+  ```
+  Context<double>& target_subsystem_context = diagram->GetMutableSubsystemContext(*target_subsystem, diagram_context.get());
+  target_subsystem_context.FixInputPort(target_subsystem->get_input_port().get_index(), Vector1d::Zero());
+  ```
+
+- Enable multicast without internet connection (drake requires multicast to work)
+      sudo ip route add 224.0.0.0/4 dev lo
