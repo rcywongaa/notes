@@ -12,6 +12,6 @@
   Context<double>& target_subsystem_context = diagram->GetMutableSubsystemContext(*target_subsystem, diagram_context.get());
   target_subsystem_context.FixInputPort(target_subsystem->get_input_port().get_index(), Vector1d::Zero());
   ```
-
 - Enable multicast without internet connection (drake requires multicast to work)
       sudo ip route add 224.0.0.0/4 dev lo
+- Use `NonSymbolicTraits` unless you need symbolic evaluation
