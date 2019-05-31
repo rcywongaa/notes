@@ -133,6 +133,20 @@ OR (if already in `project/` directory)
 
     sudo arp-scan --interface=enp0s31f6 --local
 
+### Connect to wifi via command line
+
+    nmcli device wifi connect <SSID|BSSID> password <password>
+
+<https://docs.fedoraproject.org/en-US/Fedora/20/html/Networking_Guide/sec-Connecting_to_a_Network_Using_nmcli.html>
+<https://fedoraproject.org/wiki/Networking/CLI>
+<https://developer.gnome.org/NetworkManager/stable/nmcli.html>
+
+### Configure network on old Ubuntu
+- Edit `/etc/network/interfaces`
+- Edit `/etc/wpa_supplicant.conf`
+- Make sure to quote both SSID and password!
+- Use `scan_ssid=1` in `wpa_supplicant.conf` for hidden wifi
+
 ### Unsafe SSH
 
     ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no user@ip
@@ -199,10 +213,6 @@ EOF
 
 ### [Resize home / root partitions](https://unix.stackexchange.com/questions/213245/increase-root-partition-by-reducing-home)
 
-### [Git only stage non-whitespace changes](https://stackoverflow.com/questions/3515597/add-only-non-whitespace-changes)
-
-    git diff -U0 -w --no-color | git apply --cached --ignore-whitespace --unidiff-zero -
-
 ### Find which package provides command
 
     dpkg -S $(which <command>)
@@ -240,6 +250,13 @@ change `HandleLidSwitch=hibernate`
 ### Test audio with sample sounds (may require sudo if not in `audio` group)
 
     aplay /usr/share/sounds/alsa/Noise.wav
+
+## GIT
+### [Git only stage non-whitespace changes](https://stackoverflow.com/questions/3515597/add-only-non-whitespace-changes)
+
+    git diff -U0 -w --no-color | git apply --cached --ignore-whitespace --unidiff-zero -
+
+### [If upstream removes submodule, must run `git rm removed_submodule`](https://stackoverflow.com/a/16162000/3177701)
 
 ## C / C++ / CMake
 
@@ -397,6 +414,13 @@ project(xxx)
           Class2 class2;
           class2.class1.hello();
       };
+
+### Assigning abstract class returned by function
+```
+AbstractClass& abstract = function_returning_abstract(); // OK
+AbstractClass* abstract = &function_returning_abstract(); // OK
+AbstractClass abstract = function_returning_abstract(); // Not OK
+```
 
 ## ROS
 
