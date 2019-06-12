@@ -141,11 +141,39 @@ OR (if already in `project/` directory)
 <https://fedoraproject.org/wiki/Networking/CLI>
 <https://developer.gnome.org/NetworkManager/stable/nmcli.html>
 
-### Configure network on old Ubuntu
-- Edit `/etc/network/interfaces`
-- Edit `/etc/wpa_supplicant.conf`
-- Make sure to quote both SSID and password!
-- Use `scan_ssid=1` in `wpa_supplicant.conf` for hidden wifi
+### Network configuration files (permanent / CLI)
+- `/etc/network/interfaces`
+      auto lo
+      iface lo inet loopback
+
+      auto eth0
+      iface eth0 inet static
+         address 192.168.88.110
+         netmask 255.255.255.0
+
+      auto wlan0
+      #iface wlan0 inet static
+      #   address STATIC_IP_ADDRESS
+      #   netmask MASK
+      #   gateway 10.11.12.13
+      #   wpa-ssid "static wifi"
+      #   wpa-psk "static_password"
+      #   wpa-conf /etc/wpa_supplicant.conf
+      #   pre-up iptables-restore < /etc/iptables.ipv4.nat
+      iface wlan0 inet dhcp
+          wpa-ssid "FREE WIFI"
+          wpa-psk "freewifi"
+          wpa-conf /etc/wpa_supplicant.conf
+          dns-nameservers 8.8.8.8 8.8.4.4
+- `/etc/wpa_supplicant.conf`
+      network={
+          ssid="FREE WIFI"
+          #scan_ssid=1 # Uncomment if hidden wifi
+          psk="freewifi"
+      }
+
+### Network configuration files (GUI)
+- `/etc/NetworkManager/system-connections`
 
 ### Unsafe SSH
 
