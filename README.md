@@ -191,6 +191,13 @@ OR (if already in `project/` directory)
 
     DIR=$(dirname "$(readlink -f "$0")")
 
+### Run multiple commands as another user in script
+```
+sudo -u someuser bash<<EOF
+...
+EOF
+```
+
 ### Starting common GUI applications from CLI
 
     nm-connection-editor
