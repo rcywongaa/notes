@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+    <node name="node_under_test" pkg="node_package" type="node_type">
+    </node>
+    <test test-name="ros_test" pkg="my_ros_test" type="my_ros_test_node" time-limit="600.0"/>
+</launch>
+
