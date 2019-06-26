@@ -507,6 +507,11 @@ target_include_directories(${PROJECT_NAME} INTERFACE include)
 
 ### ROS assumes robot is facing +x direction
 
+### Build only some packages & dependencies
+```
+catkin_make --only-pkg-with-deps pkgs
+```
+
 ## Eigen
 
 ### Initialize constant Eigen::Matrix
