@@ -192,8 +192,9 @@ OR (if already in `project/` directory)
     DIR=$(dirname "$(readlink -f "$0")")
 
 ### Run multiple commands as another user in script
+`-H` to make sure home directory is correctly updated
 ```
-sudo -u someuser bash<<EOF
+sudo -uH someuser bash<<EOF
 ...
 EOF
 ```
@@ -455,6 +456,12 @@ project(xxx)
 AbstractClass& abstract = function_returning_abstract(); // OK
 AbstractClass* abstract = &function_returning_abstract(); // OK
 AbstractClass abstract = function_returning_abstract(); // Not OK
+```
+
+### Using `std::bind` with reference
+std::bind by default copies (non-pointer) or moves (pointer) unless specified with std::ref
+```
+std::bind(&MyClass::func, std::ref(my_class_instance))));
 ```
 
 ## ROS

@@ -33,6 +33,10 @@
        docker tag <existing_image> <Docker Hub username>/<repo_name>:<tag_name>
        docker tag <existing_image> <Docker Hub username>/<repo_name>:latest
 
+1. Login to Docker (if using private repo)
+
+       docker login --username <Docker Hub username>
+
 1. Push to repo
 
        docker push <Docker Hub username>/<repo_name>
@@ -148,6 +152,10 @@ To expose it to be accessible through `<host_ip>:<host_port>`
 - `-i` to create interactive session
 - `-t` to use tty
 - `--rm` to automatically remove on exit
+
+### Connect to an existing container (e.g. started with `docker run`)
+
+    docker exec -it <id of running container> bash
 
 ### List currently running docker instances
 
