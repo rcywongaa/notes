@@ -17,16 +17,30 @@ class sampleAddMethod : public XMLRPCMethod {
 
             this->name = "sample.add";
         }
-        void execute(xmlrpc_c::paramList const& paramList,
-                    xmlrpc_c::value *   const  retvalP) {
+        void execute(xmlrpc_c::paramList const& paramList, xmlrpc_c::value* const retvalP) {
+            int const addend(paramList.getInt(0));
+            int const adder(paramList.getInt(1));
 
-                int const addend(paramList.getInt(0));
-                int const adder(paramList.getInt(1));
+            paramList.verifyEnd(2);
 
-                paramList.verifyEnd(2);
-
-                *retvalP = xmlrpc_c::value_int(addend + adder);
+            *retvalP = xmlrpc_c::value_int(addend + adder);
         };
+};
+
+class sampleNilMethod : public XMLRPCMethod {
+    public:
+        sampleNilMethod() {
+            this->_signature = "n:n";
+            // method's result and two arguments are integers
+            this->_help = "Prints \"bleh\"";
+
+            this->name = "sample.bleh";
+        }
+
+        void execute(xmlrpc_c::paramList const& paramList, xmlrpc_c::value* const retvalP) {
+            printf("bleh\n");
+            *retvalP = xmlrpc_c::value_nil();
+        }
 };
 
 volatile bool is_continue = true;
@@ -40,6 +54,7 @@ int main(int const, const char ** const) {
     signal(SIGINT, sigint_handler);
     std::vector<std::unique_ptr<XMLRPCMethod>> methods;
     methods.push_back(std::make_unique<sampleAddMethod>());
+    methods.push_back(std::make_unique<sampleNilMethod>());
     XMLRPCServer server(8080, std::move(methods));
     while (is_continue);
 }
