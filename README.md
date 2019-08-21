@@ -150,6 +150,7 @@ OR (if already in `project/` directory)
       iface eth0 inet static
          address 192.168.88.110
          netmask 255.255.255.0
+         gateway 10.11.12.13
 
       auto wlan0
       #iface wlan0 inet static
@@ -440,10 +441,10 @@ project(xxx)
       {
           public:
               Class2() {}
-              static Class1 class1;
+              const static Class1 class1;
       };
 
-      Class1 Class2::class1; // Don't forget this!
+      const Class1 Class2::class1; // Don't forget this!
 
       int main(int argc, char** argv)
       {
@@ -462,6 +463,20 @@ AbstractClass abstract = function_returning_abstract(); // Not OK
 std::bind by default copies (non-pointer) or moves (pointer) unless specified with std::ref
 ```
 std::bind(&MyClass::func, std::ref(my_class_instance))));
+```
+
+### Run arbitrary command after building
+```
+add_custom_command (OUTPUT my_script_output
+    COMMAND ${PROJECT_SOURCE_DIR}/my_script.sh 
+    WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/)
+
+...
+
+add_custom_target(
+     MyScriptTarget ALL
+     DEPENDS my_script_output
+)
 ```
 
 ## ROS
