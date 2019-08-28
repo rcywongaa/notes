@@ -15,11 +15,11 @@ target_link_libraries(my_xmlrpc_server
     ${CMAKE_THREAD_LIBS_INIT}
 )
 
-add_executable(run_xmlrpc_server src/main.cpp)
+add_executable(run_xmlrpc_server src/server_main.cpp)
 target_link_libraries(run_xmlrpc_server my_xmlrpc_server)
 
-add_executable(my_xmlrpc_client src/client_main.cpp)
-target_link_libraries(my_xmlrpc_client
+add_executable(run_xmlrpc_client src/client_main.cpp)
+target_link_libraries(run_xmlrpc_client
     xmlrpc_client++
     xmlrpc_client
     xmlrpc++
