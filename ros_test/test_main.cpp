@@ -5,16 +5,6 @@
 
 const std::chrono::milliseconds WAIT_DURATION(500);
 
-bool is_spin;
-void doSpin()
-{
-    while (ros::ok() && is_spin)
-    {
-        ros::spinOnce();
-        std::this_thread::sleep_for(SPIN_PERIOD);
-    }
-}
-
 void wait()
 {
     std::this_thread::sleep_for(WAIT_DURATION);
@@ -61,10 +51,9 @@ int main(int argc, char** argv)
     topic1_publisher = n.advertise<std_msgs::Empty>("topic1", 1, true);
     topic2_subscriber = n.subscribe<std_msgs::Int8>("topic2", 1, onTopic2);
 
-    is_spin = true;
-    std::thread spinner(doSpin);
+    ros::AsyncSpinner spinner(4);
+    spinner.start();
     int ret = RUN_ALL_TESTS();
-    is_spin = false;
-    spinner.join();
+    spinner.stop();
     return ret;
 }
