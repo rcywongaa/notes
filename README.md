@@ -407,6 +407,15 @@ set (CMAKE_CXX_STANDARD 11)
 project(xxx)
 ```
 
+### Link `pthread` (fix `undefined reference to pthread_create`)
+```
+find_package(Threads REQUIRED)
+...
+target_link_libraries(...
+    ${CMAKE_THREAD_LIBS_INIT}
+)
+```
+
 ### Make C++ Program Respond To SIGINT
 
     #include <signal.h>
@@ -479,6 +488,9 @@ add_custom_target(
 )
 ```
 
+### Using std::chrono::duration as parameter
+<https://stackoverflow.com/a/34932923/3177701>
+
 ## ROS
 
 ### ROS Dependencies (Fedora)
@@ -532,6 +544,16 @@ target_include_directories(${PROJECT_NAME} INTERFACE include)
 ### Build only some packages & dependencies
 ```
 catkin_make --only-pkg-with-deps pkgs
+```
+
+### ROS interface code should be separate from main function / class code
+Only bind relevant topics to relevant functions in the node main
+```
+using namespace std::placeholders;
+MyClass my_class;
+ros::Subscriber sub = n.subscribe("my_topic", std::bind([&](const std_msgs::Int8::ConstPtr& msg){
+        my_class.my_func(msg->data);
+    }, _1));
 ```
 
 ## Eigen
