@@ -82,7 +82,7 @@ class FuncBool
             }
         }
 
-        operator bool()
+        explicit operator bool()
         {
             std::lock_guard<std::mutex> g(mtx);
             return current_value;
