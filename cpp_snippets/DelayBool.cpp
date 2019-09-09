@@ -25,7 +25,7 @@ class DelayBool
         void setTrue(std::chrono::microseconds delay)
         {
             std::lock_guard<std::mutex> lock(mtx);
-            if (current_value != true && next_value != true)
+            if (next_value != true || this->delay != delay)
             {
                 this->delay = delay;
                 next_value = true;
@@ -37,11 +37,11 @@ class DelayBool
         void setFalse(std::chrono::microseconds delay)
         {
             std::lock_guard<std::mutex> lock(mtx);
-            if (current_value != false && next_value != false)
+            if (next_value != false || this->delay != delay)
             {
                 this->delay = delay;
                 next_value = false;
-                is_interrupted = false;
+                is_interrupted = true;
                 cv.notify_all();
             }
         }
@@ -58,7 +58,7 @@ class DelayBool
             while (is_alive)
             {
                 std::unique_lock<std::mutex> lock(mtx);
-                if (cv.wait_for(lock, delay, [this]{return is_interrupted;}))
+                if (cv.wait_for(lock, delay, [this]{return this->is_interrupted;}))
                 {
                     if (is_interrupted)
                     {
