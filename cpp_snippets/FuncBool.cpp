@@ -5,26 +5,27 @@
 #include <chrono>
 #include <thread>
 
-class FuncBool
+template <typename T>
+class FuncPrimitive
 {
     public:
-        FuncBool(bool initial_value, std::function<void(bool)> func, bool is_repeat = false, std::chrono::milliseconds period = std::chrono::milliseconds(100)) :
+        FuncPrimitive(T initial_value, std::function<void(T)> func, bool is_repeat = false, std::chrono::milliseconds period = std::chrono::milliseconds(100)) :
             is_alive(true),
             current_value(initial_value),
             FUNC(func),
-            runner(std::bind(&FuncBool::loop, this)),
+            runner(std::bind(&FuncPrimitive::loop, this)),
             IS_REPEAT(is_repeat),
             PERIOD(period)
         {}
 
-        ~FuncBool()
+        ~FuncPrimitive()
         {
             is_alive = false;
             cv.notify_all();
             runner.join();
         }
 
-        void set(bool new_value)
+        void set(T new_value)
         {
             std::lock_guard<std::mutex> g(mtx);
             if (current_value != new_value)
@@ -60,10 +61,10 @@ class FuncBool
     private:
         bool is_alive;
         std::mutex mtx;
-        bool current_value;
+        T current_value;
 
         std::condition_variable cv;
-        const std::function<void(bool)> FUNC;
+        const std::function<void(T)> FUNC;
         std::thread runner;
 
         const bool IS_REPEAT;
@@ -78,7 +79,7 @@ void printBool(bool b)
 
 int main(int argc, char** argv)
 {
-    FuncBool flag(false, printBool, true);
+    FuncPrimitive<bool> flag(false, printBool, true);
     flag.set(true);
     if (flag) printf("1. IS TRUE\n");
     if (!flag) printf("1. IS FALSE\n");
@@ -88,3 +89,4 @@ int main(int argc, char** argv)
     if (!flag) printf("2. IS FALSE\n");
     std::this_thread::sleep_for(std::chrono::seconds(3));
 }
+
