@@ -2,6 +2,7 @@
 #include <mutex>
 #include <chrono>
 #include <thread>
+#include <functional>
 
 class DelayBool
 {
@@ -62,6 +63,7 @@ class DelayBool
                 {
                     if (is_interrupted)
                     {
+                        printf("INTERRUPTED\n");
                         is_interrupted = false;
                         continue;
                     }
@@ -71,7 +73,6 @@ class DelayBool
                     // timed out
                     current_value = next_value;
                 }
-                std::this_thread::sleep_for(std::chrono::milliseconds(10));
             }
         }
 
@@ -87,17 +88,29 @@ class DelayBool
         std::thread runner;
 };
 
-int main(int argc, char** argv)
+void do_for(std::chrono::microseconds duration, std::chrono::microseconds period, std::function<void()> fn)
 {
-    DelayBool my_bool(false);
-    if (my_bool) printf("TRUE\n");
-    else printf("FALSE\n");
-    my_bool.setTrue(std::chrono::seconds(3));
-    while (true)
+    auto now = std::chrono::system_clock::now();
+    while (std::chrono::system_clock::now() <= now + duration)
     {
-        if (my_bool) printf("TRUE\n");
-        else printf("FALSE\n");
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        fn();
+        std::this_thread::sleep_for(period);
     }
 }
 
+int main(int argc, char** argv)
+{
+    DelayBool my_bool(false);
+    printf("Setting true in 3s\n");
+    my_bool.setTrue(std::chrono::seconds(3));
+    do_for(std::chrono::seconds(2), std::chrono::milliseconds(500), [&]{
+        if (my_bool) printf("TRUE\n");
+        else printf("FALSE\n");
+    });
+    printf("Setting false in 2s\n");
+    my_bool.setFalse(std::chrono::seconds(3));
+    do_for(std::chrono::seconds(4), std::chrono::milliseconds(500), [&]{
+        if (my_bool) printf("TRUE\n");
+        else printf("FALSE\n");
+    });
+}
