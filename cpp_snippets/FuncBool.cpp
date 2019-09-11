@@ -8,13 +8,11 @@
 class FuncBool
 {
     public:
-        FuncBool(bool initial_value, std::function<void()> true_func, std::function<void()> false_func, bool is_repeat = false, std::chrono::milliseconds period = std::chrono::milliseconds(100)) :
+        FuncBool(bool initial_value, std::function<void(bool)> func, bool is_repeat = false, std::chrono::milliseconds period = std::chrono::milliseconds(100)) :
             is_alive(true),
             current_value(initial_value),
-            TRUE_FUNC(true_func),
-            true_runner(std::bind(&FuncBool::loopTrueFunc, this)),
-            FALSE_FUNC(false_func),
-            false_runner(std::bind(&FuncBool::loopFalseFunc, this)),
+            FUNC(func),
+            runner(std::bind(&FuncBool::loop, this)),
             IS_REPEAT(is_repeat),
             PERIOD(period)
         {}
@@ -22,59 +20,30 @@ class FuncBool
         ~FuncBool()
         {
             is_alive = false;
-            true_cv.notify_all();
-            true_runner.join();
-            false_cv.notify_all();
-            false_runner.join();
+            cv.notify_all();
+            runner.join();
         }
 
-        void setTrue()
+        void set(bool new_value)
         {
             std::lock_guard<std::mutex> g(mtx);
-            if (current_value != true)
+            if (current_value != new_value)
             {
-                current_value = true;
-                if (IS_REPEAT) true_cv.notify_all();
-                else TRUE_FUNC();
+                current_value = new_value;
+                FUNC(current_value);
+                if (IS_REPEAT) cv.notify_all();
             }
         }
 
-        void setFalse()
-        {
-            std::lock_guard<std::mutex> g(mtx);
-            if (current_value != false)
-            {
-                current_value = false;
-                if (IS_REPEAT) false_cv.notify_all();
-                else FALSE_FUNC();
-            }
-        }
-
-        void loopTrueFunc()
+        void loop()
         {
             while(is_alive)
             {
                 std::unique_lock<std::mutex> l(mtx);
-                true_cv.wait(l);
-                while (is_alive && current_value == true)
+                cv.wait(l);
+                while (is_alive)
                 {
-                    TRUE_FUNC();
-                    mtx.unlock();
-                    std::this_thread::sleep_for(PERIOD);
-                    mtx.lock();
-                }
-            }
-        }
-
-        void loopFalseFunc()
-        {
-            while(is_alive)
-            {
-                std::unique_lock<std::mutex> l(mtx);
-                false_cv.wait(l);
-                while (is_alive && current_value == false)
-                {
-                    FALSE_FUNC();
+                    FUNC(current_value);
                     mtx.unlock();
                     std::this_thread::sleep_for(PERIOD);
                     mtx.lock();
@@ -93,33 +62,29 @@ class FuncBool
         std::mutex mtx;
         bool current_value;
 
-        std::condition_variable true_cv;
-        const std::function<void()> TRUE_FUNC;
-        std::thread true_runner;
+        std::condition_variable cv;
+        const std::function<void(bool)> FUNC;
+        std::thread runner;
 
-        std::condition_variable false_cv;
-        const std::function<void()> FALSE_FUNC;
-        std::thread false_runner;
         const bool IS_REPEAT;
         const std::chrono::milliseconds PERIOD;
 };
 
-void printTrue()
+void printBool(bool b)
 {
-    printf("True\n");
+    if (b) printf("True\n");
+    else printf("False\n");
 }
 
 int main(int argc, char** argv)
 {
-    FuncBool flag(false, printTrue, []{printf("False\n");}, true);
-    flag.setTrue();
+    FuncBool flag(false, printBool, true);
+    flag.set(true);
     if (flag) printf("1. IS TRUE\n");
     if (!flag) printf("1. IS FALSE\n");
     std::this_thread::sleep_for(std::chrono::seconds(3));
-    flag.setFalse();
+    flag.set(false);
     if (flag) printf("2. IS TRUE\n");
     if (!flag) printf("2. IS FALSE\n");
     std::this_thread::sleep_for(std::chrono::seconds(3));
 }
-
-
