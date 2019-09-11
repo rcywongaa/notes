@@ -1,3 +1,4 @@
+#include <type_traits>
 #include <condition_variable>
 #include <mutex>
 #include <functional>
@@ -17,6 +18,27 @@ class FuncPrimitive
             IS_REPEAT(is_repeat),
             PERIOD(period)
         {}
+
+        /** Delete copy constructor
+         * std::thread is non-copyable
+         * We don't want to deal with locking and copying class variables
+         * std::mutex is non-copyable
+         */
+        FuncPrimitive(const FuncPrimitive&) = delete; // delete copy constructor
+
+        /** Delete assignment operator
+         * std::thread is non-copyable
+         * We don't want to deal with locking and assigning class variables
+         * std::mutex is non-assignable
+         */
+        FuncPrimitive& operator=(const FuncPrimitive&) = delete; // delete assignment operator
+
+        /** Delete move constructor and operator
+         * Moving std::thread objet invalidates the original thread object
+         * std::mutex is non-moveable
+         */
+        FuncPrimitive(FuncPrimitive&&) = delete; // delete move constructor
+        FuncPrimitive& operator=(FuncPrimitive&&) = delete; // delete move-assign operator
 
         ~FuncPrimitive()
         {
