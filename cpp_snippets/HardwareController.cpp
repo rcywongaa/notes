@@ -1,3 +1,8 @@
+/**
+ * A proposed better way of controlling hardware,
+ * instead of having to manually deal with retries, reconnections, delays, waits, etc.
+ */
+
 #include <thread>
 #include <array>
 #include <mutex>
@@ -19,17 +24,18 @@ class HardwareController
             if (loop_runner.joinable()) loop_runner.join();
         }
 
-        bool setState()
+        bool setOutputState(std::array<bool, 10> desired_state)
         {
             {
                 std::lock_guard<std::mutex> guard(mtx);
                 is_at_required_state = false;
-                required_output_state[0] = true;
+                required_output_state = desired_state; // Potentially long copy, better to have individual functions for writing to individual states
             }
             for (auto start_time = std::chrono::system_clock::now();
                     std::chrono::system_clock::now() < start_time + TRY_SET_DURATION;
                     std::this_thread::sleep_for(RETRY_PERIOD))
             {
+                std::lock_guard<std::mutex> guard(mtx);
                 if (is_at_required_state)
                 {
                     return true;
@@ -39,6 +45,12 @@ class HardwareController
             return false;
         }
 
+        std::array<bool, 5> getInputState()
+        {
+            return current_input_state;
+
+        }
+
     protected:
         void loop()
         {
@@ -46,6 +58,7 @@ class HardwareController
             {
                 {
                     std::lock_guard<std::mutex> guard(mtx);
+                    // read input states
                     if (!is_at_required_state)
                     {
                         try
