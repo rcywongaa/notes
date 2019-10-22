@@ -1,3 +1,7 @@
+/**
+ * A simple std::function example with default empty function argument
+ */
+
 #include <functional>
 
 void my_func(int a, int b) {

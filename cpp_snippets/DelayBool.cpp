@@ -1,3 +1,11 @@
+/**
+ * DelayBool is a thread safe bool type that supports setting truth value after a certain delay
+ *
+ * It allows the caller to fire and forget,
+ * instead of caller having to keep track of time
+ * and remember to call the function when time is up
+ */
+
 #include <condition_variable>
 #include <mutex>
 #include <chrono>

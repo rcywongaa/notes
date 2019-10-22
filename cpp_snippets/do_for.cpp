@@ -1,3 +1,7 @@
+/**
+ * A simple function that keeps calling a function for a certain duration
+ * Basically a lambdified loop
+ */
 #include <functional>
 #include <chrono>
 #include <thread>

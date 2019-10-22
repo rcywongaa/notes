@@ -1,3 +1,7 @@
+/**
+ * An example of how to bind a lambda function
+ */
+
 #include <functional>
 #include <string>
 

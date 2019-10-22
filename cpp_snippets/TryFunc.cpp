@@ -1,3 +1,9 @@
+/**
+ * This function class returns true and calls the underlying function
+ * if conditions are met (e.g. called less than X times, called within X seconds)
+ * and returns false once that condition expires and no longer calls the underlying function
+ */
+
 #include <functional>
 #include <chrono>
 

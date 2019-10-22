@@ -1,3 +1,9 @@
+/**
+ * A primitive type (this case, bool)
+ * where setting its value will automatically trigger the calling of a function
+ * if is_repeat == true, the function keeps getting called, and takes the current value as input
+ */
+
 #include <type_traits>
 #include <condition_variable>
 #include <mutex>
