@@ -73,7 +73,7 @@ class FuncPrimitive
                 while (is_alive)
                 {
                     FUNC(current_value);
-                    mtx.unlock();
+                    l.unlock();
                     std::this_thread::sleep_for(PERIOD);
                     mtx.lock();
                 }
