@@ -556,6 +556,16 @@ ros::Subscriber sub = n.subscribe("my_topic", std::bind([&](const std_msgs::Int8
     }, _1));
 ```
 
+### Using functor with `subscribe`
+```
+std::function<void(const MyMessage::ConstPtr&)> onReceiveMyMessage([&](const MyMessage::ConstPtr& message)
+        {
+            ... *message ...
+        });
+
+sub = nh.subscribe<MyMessage>("my_topic", 1, onReceiveMyMessage);
+```
+
 ## Eigen
 
 ### Initialize constant Eigen::Matrix
@@ -742,3 +752,6 @@ Uninstall bumblebee --> Uninstall drivers --> Re-install drivers
 - Limit customer point of contact with engineering team (also control information deliberately)
 - Site visit (during intended operation conditions) must be done ASAP, and ideally with sensors and actuators
 - Document every component including how to test and how to fix / replace
+- Requirements should include minimum (things I guarantee I can deliver) and maximum (things I guarantee I won't do)
+- Mention chief driving factor of design
+- If party A is responsible for party B, but I depend on party B, create test plan for A to enforce on B
