@@ -477,7 +477,7 @@ std::bind(&MyClass::func, std::ref(my_class_instance))));
 ### Run arbitrary command after building
 ```
 add_custom_command (OUTPUT my_script_output
-    COMMAND ${PROJECT_SOURCE_DIR}/my_script.sh 
+    COMMAND ${PROJECT_SOURCE_DIR}/my_script.sh
     WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/)
 
 ...
@@ -556,14 +556,23 @@ ros::Subscriber sub = n.subscribe("my_topic", std::bind([&](const std_msgs::Int8
     }, _1));
 ```
 
-### Using functor with `subscribe`
+### Using functor with `subscribe`, `advertiseService`
 ```
-std::function<void(const MyMessage::ConstPtr&)> onReceiveMyMessage([&](const MyMessage::ConstPtr& message)
+sub = nh.subscribe<MyMessage>("my_topic", 1,
+        [&](const MyMessage::ConstPtr& message)
         {
             ... *message ...
         });
 
-sub = nh.subscribe<MyMessage>("my_topic", 1, onReceiveMyMessage);
+service =  nh.advertiseService<std_srvs::Empty::Request, std_srvs::Empty::Response>("my_service",
+            [&](std_srvs::Empty::Request &req, std_srvs::Empty::Response &res) -> bool
+```
+
+### Build Targets
+```
+catkin_make tests # Build tests only
+catkin_make run-tests # Build and run tests only
+catkin_make all # All non-tests only
 ```
 
 ## Eigen
