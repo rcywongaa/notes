@@ -1,8 +1,7 @@
-<!-- This launch file is mainly for testing during development
-It wont be called during "roslaunch sesto_dpl nav.launch"
--->
-
 <launch>
 	<node name="rosbag_recorder_node" pkg="rosbag_recorder" type="rosbag_recorder_node" output="screen">
+        <rosparam param="topics">[
+            "rosout"
+            ]</rosparam>
 	</node>
 </launch>
