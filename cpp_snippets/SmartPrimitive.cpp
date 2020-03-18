@@ -13,14 +13,14 @@
 #include <thread>
 
 template <typename T>
-class FuncPrimitive
+class SmartPrimitive
 {
     public:
-        FuncPrimitive(T initial_value, std::function<void(T)> func, bool is_repeat = false, std::chrono::milliseconds period = std::chrono::milliseconds(100)) :
+        SmartPrimitive(T initial_value, std::function<void(T)> func, bool is_repeat = false, std::chrono::milliseconds period = std::chrono::milliseconds(100)) :
             is_alive(true),
             current_value(initial_value),
             FUNC(func),
-            runner(std::bind(&FuncPrimitive::loop, this)),
+            runner(std::bind(&SmartPrimitive::loop, this)),
             IS_REPEAT(is_repeat),
             PERIOD(period)
         {}
@@ -30,23 +30,23 @@ class FuncPrimitive
          * We don't want to deal with locking and copying class variables
          * std::mutex is non-copyable
          */
-        FuncPrimitive(const FuncPrimitive&) = delete; // delete copy constructor
+        SmartPrimitive(const FuncPrimitive&) = delete; // delete copy constructor
 
         /** Delete assignment operator
          * std::thread is non-copyable
          * We don't want to deal with locking and assigning class variables
          * std::mutex is non-assignable
          */
-        FuncPrimitive& operator=(const FuncPrimitive&) = delete; // delete assignment operator
+        SmartPrimitive& operator=(const FuncPrimitive&) = delete; // delete assignment operator
 
         /** Delete move constructor and operator
          * Moving std::thread objet invalidates the original thread object
          * std::mutex is non-moveable
          */
-        FuncPrimitive(FuncPrimitive&&) = delete; // delete move constructor
-        FuncPrimitive& operator=(FuncPrimitive&&) = delete; // delete move-assign operator
+        SmartPrimitive(FuncPrimitive&&) = delete; // delete move constructor
+        SmartPrimitive& operator=(FuncPrimitive&&) = delete; // delete move-assign operator
 
-        ~FuncPrimitive()
+        ~SmartPrimitive()
         {
             is_alive = false;
             cv.notify_all();
@@ -107,7 +107,7 @@ void printBool(bool b)
 
 int main(int argc, char** argv)
 {
-    FuncPrimitive<bool> flag(false, printBool, true);
+    SmartPrimitive<bool> flag(false, printBool, true);
     flag.set(true);
     if (flag) printf("1. IS TRUE\n");
     if (!flag) printf("1. IS FALSE\n");
