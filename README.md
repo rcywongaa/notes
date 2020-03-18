@@ -186,7 +186,7 @@ OR (if already in `project/` directory)
 
 ### SSH with `sudo` (BAD)
 
-    sshpass -p “ssh_password” ssh user@ip 'echo "sudo_password" | sudo -S my_cmd'
+    sshpass -p "ssh_password" ssh user@ip 'echo "sudo_password" | sudo -S my_cmd'
 
 ### [Get Script Directory](https://stackoverflow.com/questions/59895/get-the-source-directory-of-a-bash-script-from-within-the-script-itself)
 
@@ -493,6 +493,9 @@ add_custom_target(
 
 ## ROS
 
+### Must read
+<https://answers.ros.org/question/58498/what-is-the-purpose-of-catkin_depends/>
+
 ### ROS Dependencies (Fedora)
 
     sudo dnf install --skip-broken python-empy console-bridge console-bridge-devel poco-devel boost boost-devel eigen3-devel pyqt4 qt-devel gcc gcc-c++ python-devel sip sip-devel tinyxml tinyxml-devel qt-devel qt5-devel python-qt5-devel sip sip-devel python3-sip python3-sip-devel qconf curl curl-devel gtest gtest-devel lz4-devel urdfdom-devel assimp-devel qhull-devel qhull uuid uuid-devel uuid-c++ uuid-c++-devel libuuid libuuid-devel gazebo gazebo-devel collada-dom collada-dom-devel yaml-cpp yaml-cpp-devel python2-defusedxml python-netifaces pyparsing pydot python-pyqtgraph python2-matplotlib
@@ -556,7 +559,7 @@ ros::Subscriber sub = n.subscribe("my_topic", std::bind([&](const std_msgs::Int8
     }, _1));
 ```
 
-### Using functor with `subscribe`, `advertiseService`
+### Using functor with `subscribe`, `advertiseService`, `sendGoal`
 ```
 sub = nh.subscribe<MyMessage>("my_topic", 1,
         [&](const MyMessage::ConstPtr& message)
@@ -566,6 +569,16 @@ sub = nh.subscribe<MyMessage>("my_topic", 1,
 
 service =  nh.advertiseService<std_srvs::Empty::Request, std_srvs::Empty::Response>("my_service",
             [&](std_srvs::Empty::Request &req, std_srvs::Empty::Response &res) -> bool
+            {
+                ...
+            });
+
+//https://wiki.ros.org/actionlib_tutorials/Tutorials/SimpleActionServer(ExecuteCallbackMethod)
+move_base.sendGoal(move_base_goal, [this](const actionlib::SimpleClientGoalState& state, const move_base_msgs::MoveBaseResultConstPtr& result)
+        {
+            ...
+        });
+
 ```
 
 ### Build Targets
@@ -573,6 +586,34 @@ service =  nh.advertiseService<std_srvs::Empty::Request, std_srvs::Empty::Respon
 catkin_make tests # Build tests only
 catkin_make run-tests # Build and run tests only
 catkin_make all # All non-tests only
+```
+
+### Print tf from `/map` to `/base_link`
+```
+rosrun tf tf_echo /map /base_link
+```
+
+### RPY Specification
+In ROS, roll, pitch, yaw are specified w.r.t. the initial frame.
+
+### Linking libraries from another package
+<https://answers.ros.org/question/240602/error-in-linking-a-catkin-library-against-another-catkin-package/>
+
+### getMD5Sum error
+```
+/opt/ros/melodic/include/ros/message_traits.h:126:14: error: ‘const class std::__cxx11::basic_string<char>’ has no member named ‘__getMD5Sum’
+     return m.__getMD5Sum().c_str();
+```
+Occurs when you
+```
+std::string msg = "...";
+pub.publish(msg);
+```
+instead of
+```
+std_msgs::String msg;
+msg.data = "...";
+pub.publish(msg);
 ```
 
 ## Eigen

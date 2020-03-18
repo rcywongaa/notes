@@ -2,6 +2,14 @@
 ```
 export GAZEBO_MODEL_PATH=/home/user/catkin_ws/src/
 ```
+or add the following in the `package.xml` of the package containing the models
+```
+  <export>
+    <gazebo_ros gazebo_media_path="${prefix}"/>
+    <gazebo_ros gazebo_model_path="${prefix}/models"/>
+  </export>
+```
+
 
 # `The goal pose passed to this planner must be in the map frame.  It is instead in the base_link frame.`
 Remember to set the "Target Frame" to `map` in Rviz
@@ -11,6 +19,53 @@ Add following line to launch file
 ```
 <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 ```
+
+# Creating models for gazebo in blender
+## Ensure objects are exported with the following settings
+1. Export COLLADA (`.dae`)
+   - Texture Options
+     - UV Textures
+
+## Recommended directory structure
+```
+models_package
+├── models
+│   ├── model1_name
+│   │   ├── meshes
+│   │   │   └── mesh_name.dae
+│   │   ├── materials
+│   │   │   └── textures
+│   │   │       └── texture_name.png
+```
+1. Edit `.dae` file
+   - Change path to texture to relative
+   ```
+   <init_from>../materials/textures/texture_name.png</init_from>
+   ```
+
+## Alternative directory structure
+1. Export COLLADA (`.dae`)
+   - Texture Options
+     - UV Textures
+
+```
+models_package
+├── models
+│   ├── model1_name
+│   │   ├── mesh_name.dae
+│   │   ├── texture_name.png
+```
+1. Edit `.dae` file
+   - Change path to texture to relative
+   ```
+   <init_from>texture_name.png</init_from>
+   ```
+   - Ensure `<ambient>` is set correctly for each material under `<phong>`
+   ```
+   <ambient>
+     <color sid="ambient">0.9 0.9 0.9 1</color>
+   </ambient>
+   ```
 
 # Setup differential drive, IMU, laser plugins (place in `.xacro` file)
 Taken from <https://github.com/ROBOTIS-GIT/turtlebot3/blob/master/turtlebot3_description/urdf/turtlebot3_burger.gazebo.xacro>
