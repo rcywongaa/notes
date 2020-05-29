@@ -622,6 +622,11 @@ msg.data = "...";
 pub.publish(msg);
 ```
 
+### Set log level from launch file
+```
+<node pkg="rosservice" type="rosservice" name="set_move_base_log_level" args="call --wait /move_base/set_logger_level 'ros.move_base' 'debug'" />
+```
+
 ## Eigen
 
 ### Initialize constant Eigen::Matrix
