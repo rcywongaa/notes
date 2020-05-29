@@ -530,7 +530,10 @@ install(
 
 ### CMakeLists.txt for header only libraries (CMake 3.0+ only)
 <https://cmake.org/cmake/help/v3.2/manual/cmake-buildsystem.7.html#interface-libraries>
+<http://www.mariobadr.com/creating-a-header-only-library-with-cmake.html>
 
+Note that `colcon` automatically puts header files from `include` into `include/${PROJECT_NAME}`,
+hence it is recommended to follow the convention for interoperability between `colcon` and `catkin`
 ```
 include_directories(include)
 
@@ -540,6 +543,9 @@ catkin_package(
 
 add_library(${PROJECT_NAME} INTERFACE)
 target_include_directories(${PROJECT_NAME} INTERFACE include)
+
+install(DIRECTORY include/${PROJECT_NAME}/
+        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
 ```
 
 ### ROS assumes robot is facing +x direction
