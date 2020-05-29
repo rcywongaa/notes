@@ -67,6 +67,29 @@ models_package
    </ambient>
    ```
 
+## `model.sdf` file
+```
+<model name="model1_name">
+```
+Must be the same as directory name
+
+## `model.sdf` file
+```
+  <model name="marker_4_9">
+... 
+        <uri>model://<any intermediate directory between models and model1_name>/model1_name/mesh_name.dae</uri>
+```
+Must be the same as directory name
+
+# `.world` file
+```
+<include>
+  <pose>3 0 0.1 0 0 3.14</pose>
+  <uri>model://<any intermediate directory between models and model1_name>/model1_name</uri>
+</include>
+```
+
+
 # Setup differential drive, IMU, laser plugins (place in `.xacro` file)
 Taken from <https://github.com/ROBOTIS-GIT/turtlebot3/blob/master/turtlebot3_description/urdf/turtlebot3_burger.gazebo.xacro>
 ```
