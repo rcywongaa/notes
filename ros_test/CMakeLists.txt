@@ -48,6 +48,7 @@ ${catkin_INCLUDE_DIRS}
 
 ## Add gtest based cpp test target and link libraries
 catkin_add_gtest(my_ros_test_node test/test_main.cpp)
+#catkin_add_gmock(my_ros_test_node test/test_main.cpp) # if gmock is required
 if(TARGET my_ros_test_node)
   target_link_libraries(my_ros_test_node ${PROJECT_NAME})
 endif()
