@@ -17,7 +17,7 @@ for bagfile in bagfiles:
     print("From " + str(bagfile) + ":")
     info_dict = yaml.load(rosbag.Bag(bagfile, 'r')._get_yaml_info())
     for topic, msg, t in rosbag.Bag(bagfile).read_messages():
-        if topic == "rosout":
+        if topic == "/rosout":
             if re.search(regex, msg.msg) or re.search(regex, msg.name):
                 seconds_from_start = t.to_sec() - info_dict["start"]
                 print("[" + str(seconds_from_start) + "] " + msg.msg)
