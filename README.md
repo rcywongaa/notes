@@ -288,6 +288,11 @@ change `HandleLidSwitch=hibernate`
 
     aplay /usr/share/sounds/alsa/Noise.wav
 
+### Increase volume above 100%
+
+    pactl list short sinks # List sources
+    pactl set-sink-volume 2 250% # Set source to 250%
+
 ## GIT
 ### [Git only stage non-whitespace changes](https://stackoverflow.com/questions/3515597/add-only-non-whitespace-changes)
 
@@ -302,7 +307,7 @@ change `HandleLidSwitch=hibernate`
 1. Download the correct toolchain (<https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads)>
 1. Export the toolchain prefix for ease of compiling
 
-      export ARM_CC=”<toolchain_location>/gcc-xxxxxxx/bin/arm-xxxxxx”
+      export ARM_CC="<toolchain_location>/gcc-xxxxxxx/bin/arm-xxxxxx"
 
 1. Setup cmake to use cross compiler
 
@@ -625,6 +630,12 @@ pub.publish(msg);
 ### Set log level from launch file
 ```
 <node pkg="rosservice" type="rosservice" name="set_move_base_log_level" args="call --wait /move_base/set_logger_level 'ros.move_base' 'debug'" />
+```
+
+### `forming pointer to reference type` error
+Check if function for subscription callback is fully defined, especially parameter type, i.e.
+```
+std::function<void(const my_msg_type::SharedPtr)> ...
 ```
 
 ## Eigen
