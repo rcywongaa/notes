@@ -175,3 +175,41 @@ std::function<void(const my_msg_type::SharedPtr)> ...
 ```
   <class name="my_plugin"
 ```
+
+### Binding action server functions
+```
+using MyActionServer = actionlib::SimpleActionServer<my::MyAction>;
+
+controller.registerPublishFeedback(
+        [&](const my::MyFeedback& feedback)
+        {
+            action_server.publishFeedback(feedback);
+        });
+```
+Alternative, uglier, `std::bind` way
+```
+// Because publishFeedback is overloaded
+// https://stackoverflow.com/questions/13064698/stdbind-and-overloaded-function
+controller.registerPublishFeedback(
+        std::bind(static_cast<void(MyActionServer::*)(const my::MyFeedback&)>(&MyActionServer::publishFeedback), &action_server, std::placeholders::_1));
+```
+```
+controller.registerSetSucceeded(
+        [&](const my::MyResult& result)
+        {
+            action_server.setSucceeded(result);
+        });
+```
+Alternative, uglier, `std::bind` way
+```
+controller.registerSetSucceeded(
+        std::bind(&MyActionServer::setSucceeded, &action_server, std::placeholders::_1, ""));
+```
+
+### `ros::Time` and `ros::Rate` variables can never be global / static
+<https://answers.ros.org/question/210252/terminate-called-after-throwing-an-instance-of-rostimenotinitializedexception-what-cannot-use-rostimenow-before-the-first-nodehandle-has-been-created/?answer=366122#post-id-366122i>
+
+### `static_transform_broadcaster` in launch
+```
+<node pkg="tf2_ros" type="static_transform_publisher" name="my_tf" args="0 0 0 0 0 0 from_link to_link" />
+```
