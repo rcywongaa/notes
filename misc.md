@@ -1,6 +1,5 @@
-# Rufus' Notes
-
-A bunch of random scribbles about random stuff that might randomly be useful
+# Miscellaneous
+Uncategorized notes
 
 ## Embedded Linux
 
