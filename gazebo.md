@@ -4,6 +4,9 @@ export GAZEBO_MODEL_PATH=/home/user/catkin_ws/src/
 ```
 or add the following in the `package.xml` of the package containing the models
 ```
+  <depend>gazebo_ros</depend>
+  <exec_depend>gazebo</exec_depend>
+
   <export>
     <gazebo_ros gazebo_media_path="${prefix}"/>
     <gazebo_ros gazebo_model_path="${prefix}/models"/>
