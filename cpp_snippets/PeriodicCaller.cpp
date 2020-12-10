@@ -1,3 +1,7 @@
+/**
+ * Simple object that automatically calls a function continuously
+ */
+
 #include <chrono>
 #include <functional>
 #include <thread>

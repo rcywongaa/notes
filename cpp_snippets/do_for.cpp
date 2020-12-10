@@ -19,7 +19,9 @@ void do_for(std::chrono::microseconds duration, std::chrono::microseconds period
 int main(int argc, char** argv)
 {
     bool my_bool = false;
-    do_for(std::chrono::seconds(4), std::chrono::milliseconds(500), [&]{
+    do_for(std::chrono::seconds(4), std::chrono::milliseconds(500),
+    [&]
+    {
         if (my_bool) printf("TRUE\n");
         else printf("FALSE\n");
     });

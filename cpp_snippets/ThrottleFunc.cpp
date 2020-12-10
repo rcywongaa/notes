@@ -1,3 +1,7 @@
+/**
+ * A functor that automatically throttles how often a function is called
+ */
+
 #include <functional>
 #include <chrono>
 #include <optional>
