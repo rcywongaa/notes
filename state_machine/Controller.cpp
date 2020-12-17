@@ -24,7 +24,11 @@ void Controller::update()
     printf("Start updating FSM\n");
     while (is_continue)
     {
-        state->transition(state);
+        State::StateTransition transition = state->transit();
+        if (transition)
+        {
+            state = (*transition)();
+        }
         std::this_thread::sleep_for(FSM_PERIOD_ms);
     }
     printf("Stop updating FSM\n");

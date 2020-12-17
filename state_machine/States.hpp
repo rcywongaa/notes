@@ -11,43 +11,57 @@ struct Events
 class State
 {
     public:
-        State(Target* target, Events* events);
+        using StateTransition = std::optional<std::function<std::unique_ptr<State>(Target&, Events&)>>;
 
-        void transition(std::unique_ptr<State>& state);
+        template <typename T>
+        static StateTransition make_state_transition()
+        {
+            return std::make_unique<T>(target, events);
+        };
+
+    public:
+        State(Target& target, Event& event) :
+            target(target),
+            events(events)
+        {};                                            
+
+        virtual StateTransition transit()
+        {};
+
+        ~State()
+        {};
 
     protected:
-        virtual void begin() {};
-        // This function must be idempotent
-        virtual void transition_impl(std::unique_ptr<State>& state) = 0;
-
-        Target* target;
-        Events* events;
-        bool has_begun;
+        Target& target;
+        Events& events;
 };
 
 class IdleState : public State
 {
     using State::State;
 
-    protected:
-        void begin() override final;
-        void transition_impl(std::unique_ptr<State>& state) override final;
+    public:
+        IdleState();
+        virtual StateTransition transit();
+        ~IdleState();
 };
 
 class OpeningState : public State
 {
     using State::State;
 
-    protected:
-        void begin() override final;
-        void transition_impl(std::unique_ptr<State>& state) override final;
+    public:
+        OpeningState();
+        virtual StateTransition transit();
+        ~OpeningState();
 };
 
 class ClosingState : public State
 {
     using State::State;
 
-    protected:
-        void begin() override final;
-        void transition_impl(std::unique_ptr<State>& state) override final;
+    public:
+        ClosingState();
+        virtual StateTransition transit();
+        ~ClosingState();
 };
