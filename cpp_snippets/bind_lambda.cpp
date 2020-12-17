@@ -23,6 +23,6 @@ int main(int argc, char** argv)
     std::bind(
     [&](int a)
     {
-            my_class.func(std::to_string(a));
+        my_class.func(std::to_string(a));
     }, _1)(9);
 }
