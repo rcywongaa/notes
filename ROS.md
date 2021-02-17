@@ -241,5 +241,40 @@ rosrun actionlib axserver.py
 to read from variables registered through `hardware_interface::JointStateInterface`
 and writes to the variables registered through `hardware_interface::XXXJointInterface`
 
+## ROS2
+
 #### ROS2 Control
 - Currently, `JointTrajectoryController` only supports `hardware_interface::HW_IF_POSITION` (i.e. position command interface)
+
+### Linking messages in same package
+```
+find_package(rosidl_default_generators REQUIRED)
+rosidl_generate_interfaces(${PROJECT_NAME}_msgs
+  "msg/PointTrajectory.msg"
+  LIBRARY_NAME ${PROJECT_NAME} # See https://github.com/ros2/rosidl/issues/441#issuecomment-591025515
+)
+
+add_library(${PROJECT_NAME} src/Robot.cpp)
+ament_target_dependencies(${PROJECT_NAME}
+  rclcpp
+  moveit_ros_planning_interface
+)
+rosidl_target_interfaces(${PROJECT_NAME} ${PROJECT_NAME}_msgs "rosidl_typesupport_cpp")
+
+add_executable(node src/node.cpp)
+ament_target_dependencies(node rclcpp)
+target_link_libraries(node ${PROJECT_NAME})
+rosidl_target_interfaces(node ${PROJECT_NAME}_msgs "rosidl_typesupport_cpp")
+
+```
+
+### `std_msgs` vs `builtin_interface`
+
+### Troubleshooting `rosidl` errors for custom messages
+- https://answers.ros.org/question/326008/ros2-run-symbol-not-found-on-custom-msg/
+- Try cleaning `install` directory.  Sometimes `setup.zsh` is not updated correctly
+
+### ROS2 latching
+<https://answers.ros.org/question/305795/ros2-latching/>
+
+### All `<link>`s in URDFs must have `<inertial>` to be used in simulation
