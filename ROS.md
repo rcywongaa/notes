@@ -120,9 +120,9 @@ move_base.sendGoal(move_base_goal, [this](const actionlib::SimpleClientGoalState
         });
 
 ```
-Note that an empty capture `[]` is not allowed and will result in 
+Note that an empty capture `[]` is not allowed and will result in
 ```
-call of overloaded ‘subscribe(const char [20], int, main(int, char**)::<lambda(const ConstPtr&)>)’ is ambiguous
+call of overloaded 'subscribe(const char [20], int, main(int, char**)::<lambda(const ConstPtr&)>)' is ambiguous
 ```
 
 ### Build Targets
@@ -135,6 +135,11 @@ catkin_make all # All non-tests only
 ### Print tf from `/map` to `/base_link`
 ```
 rosrun tf tf_echo /map /base_link
+```
+
+### Print current tf tree
+```
+rosrun rqt_tf_tree rqt_tf_tree
 ```
 
 ### RPY Specification
@@ -158,6 +163,11 @@ instead of
 std_msgs::String msg;
 msg.data = "...";
 pub.publish(msg);
+```
+
+### Calling service in launch file
+```
+<node pkg="rosservice" type="rosservice" name="set_safezone" args="call --wait /set_safezone '{pose: {position: {x: 1.0, y: 0.0, z: 0.5}, orientation: {x: 0.0, y: 0.0, z: 0.0, w: 1.0}}, size: {x: 1.0, y: 1.0, z: 1.0}}'"/>
 ```
 
 ### Set log level from launch file
@@ -213,3 +223,23 @@ controller.registerSetSucceeded(
 ```
 <node pkg="tf2_ros" type="static_transform_publisher" name="my_tf" args="0 0 0 0 0 0 from_link to_link" />
 ```
+
+### Actionlib GUI
+Client:
+```
+rosrun actionlib axclient.py
+```
+Server:
+```
+rosrun actionlib axserver.py
+```
+
+### ROS Control
+- <https://medium.com/@slaterobotics/how-to-implement-ros-control-on-a-custom-robot-748b52751f2e>
+- <https://github.com/ros-controls/ros_control/wiki/hardware_interface>
+- `controller_manager::update()` triggers all controllers associated with joints with names registered through `hardware_interface::JointStateInterface`
+to read from variables registered through `hardware_interface::JointStateInterface`
+and writes to the variables registered through `hardware_interface::XXXJointInterface`
+
+#### ROS2 Control
+- Currently, `JointTrajectoryController` only supports `hardware_interface::HW_IF_POSITION` (i.e. position command interface)

@@ -181,3 +181,42 @@ Taken from <https://github.com/ROBOTIS-GIT/turtlebot3/blob/master/turtlebot3_des
     </sensor>
   </gazebo>
 ```
+
+# How `physics` and `rendering` are linked together
+```
+        Server::LoadImpl()
+            -> physics::init_worlds(rendering::update_scene_poses)
+                -> World::Init(UpdateScenePosesFunc _func)
+                    -> WorldPrivate::updateScenePoses = _func
+
+GazeboRosApiPlugin::setModelState()
+    -> Model::SetWorldPose = Entity::SetWorldPose()
+        -> Entity::SetWorldPoseModel()
+            -> Entity::PublishPose()
+                -> World::PublishModelPose()
+                    -> WorldPrivate::publishModelPoses
+
+            World::Step()
+                -> ProcessMessages()
+                    -> WorldPrivate::updateScenePoses(WorldPrivate::publishModelPoses)
+                        rendering::update_scene_poses
+                            -> Scene::UpdatePoses
+                                -> Scene::OnPoseMsg
+                                    -> ScenePrivate::poseMsgs
+
+                        Scene::PreRender() 
+                            Scene::ProcessSceneMsg()
+                                -> ScenePrivate::poseMsgs
+                                    -> Scene::ProcessModelMsg()
+                            -> Scene::ProcessVisualMsg()
+                                -> Heightmap::Load()
+                                    -> Ogre::PageManager()
+                                    -> Scene::GetCamera()
+
+Scene::CreateGpuLaser
+    --> GpuLaser::notifyRenderSingleObject
+    --> GpuLaser::UpdateRenderTarget
+```
+
+# Converting `.urdf` to `.sdf`
+- Ensure all `<link>` elements contain `<inertial>` property
