@@ -1,0 +1,1 @@
+- `|` is used to separate multiple commands (regardless of whether inside `'` or `"`) and must always be escaped with `\|` 
