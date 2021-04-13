@@ -241,6 +241,20 @@ rosrun actionlib axserver.py
 to read from variables registered through `hardware_interface::JointStateInterface`
 and writes to the variables registered through `hardware_interface::XXXJointInterface`
 
+### Linting
+```
+set(ROSLINT_CPP_OPTS "--filter=-legal/copyright,-build/c++11,-whitespace/braces")
+roslint_cpp()
+set(ROSLINT_PYTHON_OPTS "1>&2") # Redirect stdout to stderr so it gets printed out during build
+roslint_python()
+roslint_add_test()
+```
+
+### Redirect `rostopic` output to file
+```
+stdbuf -oL rostopic hz /my_topic &> output.txt
+```
+
 ## ROS2
 
 #### ROS2 Control

@@ -25,6 +25,11 @@ if [[ -z "$1" || "$1" == "-h" ]]; then
 fi
 ```
 
+## Redirect output while running
+```
+stdbuf -oL command > output
+```
+
 ## Gotchas
 - .bashrc cannot be sourced in non-interactive shell (Check first few lines of ~/.bashrc)
 - [Bash functions cannot return strings (or anything other than integers)](https://stackoverflow.com/questions/3236871/how-to-return-a-string-value-from-a-bash-function)
