@@ -255,6 +255,11 @@ roslint_add_test()
 stdbuf -oL rostopic hz /my_topic &> output.txt
 ```
 
+### Troubleshooting TF lookup extrapolation errors
+- Check relevant TF publishers publishing time
+- Check relevant `TransformStamped` timestamps
+- Check relevant TF buffer lookup time
+
 ## ROS2
 
 #### ROS2 Control
@@ -292,3 +297,24 @@ rosidl_target_interfaces(node ${PROJECT_NAME}_msgs "rosidl_typesupport_cpp")
 <https://answers.ros.org/question/305795/ros2-latching/>
 
 ### All `<link>`s in URDFs must have `<inertial>` to be used in simulation
+
+### Disable line buffering when piping `ros2` commands
+```
+export PYTHONUNBUFFERED=1
+ros2 topic echo ... | grep --line-buffered ...
+```
+
+## Docker
+
+### `Failed to create an OpenGL context`
+1. Set up `nvidia-docker` (https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)
+1. Add the following to the `.Dockerfile`
+   ```
+   ENV NVIDIA_VISIBLE_DEVICES \
+     ${NVIDIA_VISIBLE_DEVICES:-all}
+   ENV NVIDIA_DRIVER_CAPABILITIES \
+     ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics
+   ```
+1. Rebuild image
+1. Run image with `docker run --gpus all`
+
