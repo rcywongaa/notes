@@ -260,6 +260,43 @@ stdbuf -oL rostopic hz /my_topic &> output.txt
 - Check relevant `TransformStamped` timestamps
 - Check relevant TF buffer lookup time
 
+### `XXXActionGoal` vs `XXXGoal`
+Note that constants defined in the goal section of the `.action` file is only accessible from `XXXGoal` namespace and not `XXXActionGoal` namespace
+
+### ROS with flask
+```
+if __name__ == '__main__':
+    # Shutdown is handled by Flask
+    rospy.init_node("payload_rest_interface", disable_signals=True)
+    app = Flask(__name__)
+
+    rospy.loginfo("Creating REST interface...")
+    interface = PayloadInterface()
+
+    executor = ThreadPoolExecutor(max_workers=1)
+
+    @app.route('/payload/test', methods=['POST'])
+    def test():
+        return Response(status=200, headers={})
+
+    @app.route('/payload/execute', methods=['POST'])
+    def execute():
+        data = request.get_json()
+        action_type = data['action_type']
+        shelf = data['shelf']
+        location = data['location']
+        interface.activatePayload(action_type, shelf, location)
+        executor.submit(interface.wait_and_notify)
+        return Response(status=200, headers={})
+
+    @app.route('/payload/status', methods=['GET'])
+    def status():
+        return Response(status=200, headers={})
+
+    rospy.loginfo("Starting server...")
+    app.run(host=interface.host, port=interface.port)
+```
+
 ## ROS2
 
 #### ROS2 Control
@@ -302,6 +339,11 @@ rosidl_target_interfaces(node ${PROJECT_NAME}_msgs "rosidl_typesupport_cpp")
 ```
 export PYTHONUNBUFFERED=1
 ros2 topic echo ... | grep --line-buffered ...
+```
+
+### Logging with anonymous logger
+```
+RCLCPP_INFO(rclcpp::get_logger("my_logger"), "my_message");
 ```
 
 ## Docker
