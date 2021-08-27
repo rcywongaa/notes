@@ -8,6 +8,6 @@ sleep 1
 
 #/etc/X11/xinit/xinitrc &
 #/etc/X11/Xsession &
-#exec gnome-session
-exec lightdm-session &
+exec gnome-session &
+#exec lightdm-session &
 #sudo service lightdm restart

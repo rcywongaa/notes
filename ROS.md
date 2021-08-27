@@ -346,17 +346,3 @@ ros2 topic echo ... | grep --line-buffered ...
 RCLCPP_INFO(rclcpp::get_logger("my_logger"), "my_message");
 ```
 
-## Docker
-
-### `Failed to create an OpenGL context`
-1. Set up `nvidia-docker` (https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker)
-1. Add the following to the `.Dockerfile`
-   ```
-   ENV NVIDIA_VISIBLE_DEVICES \
-     ${NVIDIA_VISIBLE_DEVICES:-all}
-   ENV NVIDIA_DRIVER_CAPABILITIES \
-     ${NVIDIA_DRIVER_CAPABILITIES:+$NVIDIA_DRIVER_CAPABILITIES,}graphics
-   ```
-1. Rebuild image
-1. Run image with `docker run --gpus all`
-

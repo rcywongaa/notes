@@ -1,3 +1,12 @@
+# Update Ubuntu Nvidia drivers
+```
+sudo ubuntu-drivers autoinstall 
+```
+If that fails, try
+```
+sudo apt autoremove
+```
+
 # Docker on Nvidia Jetson TX2 on Orbitty board
 ## Hardware Setup
 1. Download and install [Nvidia SDK Manager](https://developer.nvidia.com/nvidia-sdk-manager)

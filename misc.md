@@ -665,6 +665,34 @@ Uninstall bumblebee --> Uninstall drivers --> Re-install drivers
 
     xmlrpc http://localhost:8080/RPC2 system.listMethods
 
+## Boot failure
+1. Boot to live USB
+1. Check overall disk health
+   ```
+   smartctl -a /dev/sda
+   ```
+   Look for `Media and Data Integrity Errors`
+1. Check for bad sectors: <https://www.tecmint.com/check-linux-hard-disk-bad-sectors-bad-blocks/>
+1. If there are disk errors, likely filesystem is corrupted.  Attempt to repair filesystem
+   ```
+   sudo fsck -p /dev/sda
+   ```
+1. Try rebooting
+1. If it still fails, attempt to rescue: <https://www.technibble.com/guide-using-ddrescue-recover-data/>
+1. After cloning disk, try booting (make sure BIOS is using the new drive for booting)
+1. If it still fails, run repair filesystem again on the new drive
+1. Try booting
+
+## Increase volume above max
+1. Find correct sink
+   ```
+   pactl list | ag -B5 "AirPods"
+   ```
+1. Set volume for sink
+   ```
+   pactl -- set-sink-volume <sink number> 150%
+   ```
+
 ## Project Management
 
 - Assumptions Page before signing requirements
