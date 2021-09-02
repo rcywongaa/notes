@@ -212,4 +212,28 @@ Note that variable expansion occurs outside container, to make it occur inside:
 1. Rebuild image
 1. Run image with `docker run --gpus all`
 
+## Docker Swarm
+### Create swarm
 
+    docker swarm init --advertise-addr=172.31.19.251
+
+Ensure `advertise-addr` is accessible externally (configure firewall inbound rules)
+### Join swarm
+
+    docker swarm join --token <refer to response from docker swarm init> 172.31.19.251:2377
+
+### Check swarm participants (only in swarm leader)
+
+    docker node ls
+
+### Start container (equivalent to `docker run` for non-swarm)
+
+    docker service create --name=<container name> --publish=80:80 nginx
+
+### Duplicate container to swarm participants
+
+    docker service update --replicas=5 <container name>
+
+### Check swarm containers
+
+    docker service ps <container name>
