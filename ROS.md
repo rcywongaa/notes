@@ -297,6 +297,8 @@ if __name__ == '__main__':
     app.run(host=interface.host, port=interface.port)
 ```
 
+### Nodelets crash silently
+
 ## ROS2
 
 #### ROS2 Control

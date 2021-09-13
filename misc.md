@@ -495,6 +495,10 @@ add_custom_target(
 ### Using std::chrono::duration as parameter
 <https://stackoverflow.com/a/34932923/3177701>
 
+## GTest
+
+### `ASSERT_*` can only be used in functions that `return void`
+
 ## Eigen
 
 ### Initialize constant Eigen::Matrix
@@ -682,16 +686,6 @@ Uninstall bumblebee --> Uninstall drivers --> Re-install drivers
 1. After cloning disk, try booting (make sure BIOS is using the new drive for booting)
 1. If it still fails, run repair filesystem again on the new drive
 1. Try booting
-
-## Increase volume above max
-1. Find correct sink
-   ```
-   pactl list | ag -B5 "AirPods"
-   ```
-1. Set volume for sink
-   ```
-   pactl -- set-sink-volume <sink number> 150%
-   ```
 
 ## Project Management
 
