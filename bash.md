@@ -16,7 +16,8 @@ BLINK=$(tput blink)
 REVERSE=$(tput smso)
 UNDERLINE=$(tput smul)
 
-DIR=$(dirname "$(readlink -f "$0")")
+# Gets the correct directory even if sourcing / called from another script
+DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )" &> /dev/null && pwd 2> /dev/null; )";
 
 if [[ -z "$1" || "$1" == "-h" ]]; then
     printf -- "HELP MESSAGE\n"
