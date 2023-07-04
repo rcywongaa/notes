@@ -15,3 +15,49 @@
 - Enable multicast without internet connection (drake requires multicast to work)
       sudo ip route add 224.0.0.0/4 dev lo
 - Use `NonSymbolicTraits` unless you need symbolic evaluation
+
+## Install from source
+
+## Out of memory when building drake
+In `CMakeLists.txt`, add `--jobs 4` after `${BAZEL_TARGETS}`
+```
+ExternalProject_Add(drake_cxx_python
+  SOURCE_DIR "${PROJECT_SOURCE_DIR}"
+  CONFIGURE_COMMAND :
+  BUILD_COMMAND
+    ${BAZEL_ENV}
+    "${Bazel_EXECUTABLE}"
+    ${BAZEL_STARTUP_ARGS}
+    build
+    ${BAZEL_ARGS}
+    ${BAZEL_TARGETS}
+    --jobs 4
+  BUILD_IN_SOURCE ON
+  BUILD_ALWAYS ON
+  INSTALL_COMMAND
+    ${BAZEL_ENV}
+    "${Bazel_EXECUTABLE}"
+    ${BAZEL_STARTUP_ARGS}
+    run
+    ${BAZEL_ARGS}
+    ${BAZEL_TARGETS}
+    --
+    ${BAZEL_TARGETS_ARGS}
+  USES_TERMINAL_BUILD ON
+  USES_TERMINAL_INSTALL ON
+)
+```
+
+## Link error on `std::filesystem` calls
+Error
+```
+error: undefined reference to 'std::filesystem::__cxx11::path::_M_find_extension() const'
+```
+Use gcc 7 instead of gcc 8
+
+## VTK problems when launching drake-visualizer
+- `ModuleNotFoundError: No module named 'vtkCommonCorePython'`
+- `libvtkxxx.so: No such file or directory`
+
+In `CMakeLists.txt`, add `--define="-DUSE_SYSTEM_VTK=OFF"` after `${BAZEL_TARGETS}`
+
