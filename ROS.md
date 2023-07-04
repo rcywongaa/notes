@@ -131,6 +131,10 @@ catkin_make tests # Build tests only
 catkin_make run-tests # Build and run tests only
 catkin_make all # All non-tests only
 ```
+```
+catkin build --catkin-make-args tests # Build tests only
+catkin build --catkin-make-args test # Build and run tests
+```
 
 ### Print tf from `/map` to `/base_link`
 ```
@@ -299,6 +303,9 @@ if __name__ == '__main__':
 
 ### Nodelets crash silently
 
+### rosparam lists
+<https://answers.ros.org/question/194592/how-to-read-a-vectorstrings-parameter-from-command-line/>
+
 ## ROS2
 
 #### ROS2 Control
@@ -348,3 +355,12 @@ ros2 topic echo ... | grep --line-buffered ...
 RCLCPP_INFO(rclcpp::get_logger("my_logger"), "my_message");
 ```
 
+### Print tf from `/map` to `/base_link`
+```
+ros2 run tf2_ros tf2_echo map base_link
+```
+### Set log level of specific logger
+<https://docs.ros.org/en/humble/Tutorials/Demos/Logging-and-logger-configuration.html>
+```
+--ros-args --log-level my_logger:=debug
+```
